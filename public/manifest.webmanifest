@@ -2,7 +2,7 @@
   "name": "TrackSelavu — Offline Expense Tracker",
   "short_name": "TrackSelavu",
   "description": "Offline-first daily expense, income, and budget tracker for India.",
-  "theme_color": "#00695c",
+  "theme_color": "#1976d2",
   "background_color": "#f4f6f5",
   "display": "standalone",
   "scope": "./",

@@ -13,8 +13,8 @@ body {
 
 @include mat.core();
 
-// TrackSelavu brand palette: deep teal primary, warm orange accent.
-$ts-primary: mat.m2-define-palette(mat.$m2-teal-palette, 700, 400, 900);
+// TrackSelavu brand palette: Google/GPay-style blue primary, warm orange accent.
+$ts-primary: mat.m2-define-palette(mat.$m2-blue-palette, 700, 400, 900);
 $ts-accent: mat.m2-define-palette(mat.$m2-orange-palette, 600, 300, 800);
 $ts-warn: mat.m2-define-palette(mat.$m2-red-palette);
 
@@ -43,7 +43,7 @@ $ts-dark-theme: mat.m2-define-dark-theme((
 }
 
 :root {
-  --ts-primary: #00695c;
+  --ts-primary: #1976d2;
   --ts-accent: #fb8c00;
   --ts-bg: #f4f6f5;
   --ts-card-bg: #ffffff;

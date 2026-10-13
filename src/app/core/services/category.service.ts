@@ -16,15 +16,24 @@ export class CategoryInUseError extends Error {
 export class CategoryService {
   constructor(private readonly dbService: DbService) {}
 
-  /** Populates sensible defaults on first launch only; never overwrites user data. */
+  /**
+   * Populates sensible defaults on first launch, and on every later launch adds any
+   * new default categories that shipped in an app update (matched by name+type) —
+   * without touching or duplicating anything the user already has.
+   */
   async seedDefaultsIfEmpty(): Promise<void> {
     const db = await this.dbService.getDb();
-    const count = await db.count('categories');
-    if (count > 0) return;
+    const existing = await db.getAll('categories');
+    const existingKeys = new Set(existing.map((c) => `${c.type}:${c.name.trim().toLowerCase()}`));
+
+    const missing = [...DEFAULT_INCOME_CATEGORIES, ...DEFAULT_EXPENSE_CATEGORIES].filter(
+      (c) => !existingKeys.has(`${c.type}:${c.name.trim().toLowerCase()}`),
+    );
+    if (missing.length === 0) return;
 
     const now = Date.now();
     const tx = db.transaction('categories', 'readwrite');
-    for (const c of [...DEFAULT_INCOME_CATEGORIES, ...DEFAULT_EXPENSE_CATEGORIES]) {
+    for (const c of missing) {
       const category: Category = { ...c, id: generateId(), createdAt: now, updatedAt: now };
       await tx.store.put(category);
     }

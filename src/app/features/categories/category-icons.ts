@@ -6,6 +6,7 @@ export const CATEGORY_ICON_CHOICES: string[] = [
   'sports_esports', 'coffee', 'local_bar', 'checkroom', 'build', 'phone_iphone', 'wifi',
   'electrical_services', 'water_drop', 'local_atm', 'credit_card', 'savings', 'volunteer_activism',
   'card_giftcard', 'celebration', 'flight_takeoff', 'hotel', 'local_taxi', 'local_pharmacy',
+  'sim_card', 'smartphone',
 ];
 
 export const CATEGORY_COLOR_CHOICES: string[] = [

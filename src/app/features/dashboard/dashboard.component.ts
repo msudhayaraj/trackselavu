@@ -148,7 +148,7 @@ export class DashboardComponent implements OnInit {
           {
             label: 'Expense',
             data: monthlySeries.map((p) => p.expensePaise / 100),
-            backgroundColor: '#00695c',
+            backgroundColor: '#1976d2',
           },
         ],
       },

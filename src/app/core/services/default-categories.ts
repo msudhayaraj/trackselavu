@@ -13,6 +13,7 @@ export const DEFAULT_EXPENSE_CATEGORIES: NewCategory[] = [
   { name: 'Food', type: 'EXPENSE', icon: 'restaurant', color: '#fb8c00', isActive: true, isDefault: true },
   { name: 'Petrol and Fuel', type: 'EXPENSE', icon: 'local_gas_station', color: '#f4511e', isActive: true, isDefault: true },
   { name: 'Shopping', type: 'EXPENSE', icon: 'shopping_bag', color: '#8e24aa', isActive: true, isDefault: true },
+  { name: 'Recharge', type: 'EXPENSE', icon: 'sim_card', color: '#00acc1', isActive: true, isDefault: true },
   { name: 'Bills', type: 'EXPENSE', icon: 'receipt_long', color: '#6d4c41', isActive: true, isDefault: true },
   { name: 'Travel', type: 'EXPENSE', icon: 'flight', color: '#3949ab', isActive: true, isDefault: true },
   { name: 'Rent', type: 'EXPENSE', icon: 'home', color: '#546e7a', isActive: true, isDefault: true },

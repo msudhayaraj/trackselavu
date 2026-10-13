@@ -23,7 +23,7 @@ import { ChartCanvasComponent } from '../../shared/chart-canvas/chart-canvas.com
 import { inrTickCallback } from '../../shared/chart-inr.util';
 
 const CATEGORY_PALETTE = [
-  '#00695c', '#fb8c00', '#8e24aa', '#3949ab', '#43a047', '#e53935',
+  '#1976d2', '#fb8c00', '#8e24aa', '#3949ab', '#43a047', '#e53935',
   '#d81b60', '#1e88e5', '#6d4c41', '#fbc02d', '#78909c', '#00acc1',
 ];
 
@@ -119,8 +119,8 @@ export class ChartsComponent implements OnInit {
           {
             label: 'Income',
             data: series.map((p) => p.incomePaise / 100),
-            borderColor: '#00695c',
-            backgroundColor: 'rgba(0,105,92,0.1)',
+            borderColor: '#1976d2',
+            backgroundColor: 'rgba(25,118,210,0.1)',
             fill: true,
             tension: 0.3,
           },
@@ -144,7 +144,7 @@ export class ChartsComponent implements OnInit {
       type: 'bar',
       data: {
         labels: series.map((p) => p.label),
-        datasets: [{ label: 'Expense', data: series.map((p) => p.expensePaise / 100), backgroundColor: '#00695c' }],
+        datasets: [{ label: 'Expense', data: series.map((p) => p.expensePaise / 100), backgroundColor: '#1976d2' }],
       },
       options: {
         responsive: true,
@@ -202,7 +202,7 @@ export class ChartsComponent implements OnInit {
       data: {
         labels: series.map((p) => p.label),
         datasets: [
-          { label: 'Income', data: series.map((p) => p.incomePaise / 100), backgroundColor: '#00695c' },
+          { label: 'Income', data: series.map((p) => p.incomePaise / 100), backgroundColor: '#1976d2' },
           { label: 'Expense', data: series.map((p) => p.expensePaise / 100), backgroundColor: '#fb8c00' },
         ],
       },
@@ -227,7 +227,7 @@ export class ChartsComponent implements OnInit {
           {
             label: 'Actual',
             data: usages.map((u) => u.spentPaise / 100),
-            backgroundColor: usages.map((u) => (u.isExceeded ? '#e53935' : '#00695c')),
+            backgroundColor: usages.map((u) => (u.isExceeded ? '#e53935' : '#1976d2')),
           },
         ],
       },
