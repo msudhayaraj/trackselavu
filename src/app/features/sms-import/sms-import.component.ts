@@ -18,10 +18,16 @@ import { Category } from '../../core/models/category.model';
 import { SmsImportRecord } from '../../core/models/sms-import.model';
 import { parseAmountToPaise, paiseToRupees } from '../../core/utils/currency.util';
 import { fromDateKey, toDateKey } from '../../core/utils/date-range.util';
-import { PAYMENT_METHODS, PAYMENT_METHOD_LABELS } from '../../shared/labels.util';
+import {
+  PAYMENT_METHODS,
+  PAYMENT_METHOD_COLORS,
+  PAYMENT_METHOD_ICONS,
+  PAYMENT_METHOD_LABELS,
+} from '../../shared/labels.util';
 import { readFileAsText } from '../../shared/download.util';
 import { ToastService } from '../../shared/toast.service';
 import { ConfirmService } from '../../shared/confirm-dialog/confirm.service';
+import { LoadingService } from '../../shared/loading/loading.service';
 
 interface PendingItem {
   record: SmsImportRecord;
@@ -54,9 +60,12 @@ export class SmsImportComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly toast = inject(ToastService);
   private readonly confirmService = inject(ConfirmService);
+  private readonly loadingService = inject(LoadingService);
 
   readonly paymentMethods = PAYMENT_METHODS;
   readonly paymentMethodLabels = PAYMENT_METHOD_LABELS;
+  readonly paymentMethodIcons = PAYMENT_METHOD_ICONS;
+  readonly paymentMethodColors = PAYMENT_METHOD_COLORS;
 
   readonly pasteText = signal('');
   readonly ingesting = signal(false);
@@ -114,6 +123,7 @@ export class SmsImportComponent implements OnInit {
     const text = this.pasteText().trim();
     if (!text) return;
     this.ingesting.set(true);
+    this.loadingService.show();
     try {
       const result = await this.smsImportService.ingest(text, 'PASTE');
       this.pasteText.set('');
@@ -128,6 +138,7 @@ export class SmsImportComponent implements OnInit {
       this.toast.error('Could not process the pasted text');
     } finally {
       this.ingesting.set(false);
+      this.loadingService.hide();
     }
   }
 
@@ -137,6 +148,7 @@ export class SmsImportComponent implements OnInit {
     input.value = '';
     if (!file) return;
     this.ingesting.set(true);
+    this.loadingService.show();
     try {
       const text = await readFileAsText(file);
       const result = await this.smsImportService.ingest(text, 'FILE_IMPORT');
@@ -148,6 +160,7 @@ export class SmsImportComponent implements OnInit {
       this.toast.error('Could not read this file');
     } finally {
       this.ingesting.set(false);
+      this.loadingService.hide();
     }
   }
 
@@ -166,14 +179,16 @@ export class SmsImportComponent implements OnInit {
       return;
     }
 
-    await this.smsImportService.approve(item.record.id, {
-      type: v.type,
-      amountPaise,
-      categoryId: v.categoryId,
-      dateKey: toDateKey(v.date),
-      paymentMethod: v.paymentMethod,
-      merchant: v.merchant || undefined,
-    });
+    await this.loadingService.wrap(
+      this.smsImportService.approve(item.record.id, {
+        type: v.type,
+        amountPaise,
+        categoryId: v.categoryId,
+        dateKey: toDateKey(v.date),
+        paymentMethod: v.paymentMethod,
+        merchant: v.merchant || undefined,
+      }),
+    );
     this.toast.success('Transaction saved');
     await this.reloadPending();
   }
@@ -185,7 +200,7 @@ export class SmsImportComponent implements OnInit {
       confirmLabel: 'Ignore',
     });
     if (!confirmed) return;
-    await this.smsImportService.reject(item.record.id);
+    await this.loadingService.wrap(this.smsImportService.reject(item.record.id));
     this.toast.success('Message rejected');
     await this.reloadPending();
   }

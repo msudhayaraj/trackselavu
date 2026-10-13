@@ -20,7 +20,13 @@ import { Category } from '../../../core/models/category.model';
 import { Transaction } from '../../../core/models/transaction.model';
 import { formatPaiseAsInr, parseAmountToPaise } from '../../../core/utils/currency.util';
 import { toDateKey } from '../../../core/utils/date-range.util';
-import { PAYMENT_METHODS, PAYMENT_METHOD_LABELS, TRANSACTION_SOURCE_LABELS } from '../../../shared/labels.util';
+import {
+  PAYMENT_METHODS,
+  PAYMENT_METHOD_COLORS,
+  PAYMENT_METHOD_ICONS,
+  PAYMENT_METHOD_LABELS,
+  TRANSACTION_SOURCE_LABELS,
+} from '../../../shared/labels.util';
 import { ConfirmService } from '../../../shared/confirm-dialog/confirm.service';
 import { ToastService } from '../../../shared/toast.service';
 
@@ -47,6 +53,8 @@ import { ToastService } from '../../../shared/toast.service';
 export class TransactionListComponent implements OnInit, OnDestroy {
   readonly paymentMethods = PAYMENT_METHODS;
   readonly paymentMethodLabels = PAYMENT_METHOD_LABELS;
+  readonly paymentMethodIcons = PAYMENT_METHOD_ICONS;
+  readonly paymentMethodColors = PAYMENT_METHOD_COLORS;
   readonly sourceLabels = TRANSACTION_SOURCE_LABELS;
 
   readonly categories = signal<Category[]>([]);

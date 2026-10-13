@@ -1,6 +1,6 @@
 @if (!ready()) {
   <div class="ts-boot-loader">
-    <mat-spinner diameter="40"></mat-spinner>
+    <app-icon-spinner [size]="56"></app-icon-spinner>
     <p>Loading TrackSelavu…</p>
   </div>
 } @else if (locked()) {
@@ -71,3 +71,5 @@
     </mat-sidenav-content>
   </mat-sidenav-container>
 }
+
+<app-loading-overlay></app-loading-overlay>

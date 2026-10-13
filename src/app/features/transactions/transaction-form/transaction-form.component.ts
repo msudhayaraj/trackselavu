@@ -10,7 +10,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatExpansionModule } from '@angular/material/expansion';
 
 import { TransactionService } from '../../../core/services/transaction.service';
 import { CategoryService } from '../../../core/services/category.service';
@@ -18,9 +17,15 @@ import { Category } from '../../../core/models/category.model';
 import { Transaction, TransactionClassification } from '../../../core/models/transaction.model';
 import { parseAmountToPaise, paiseToRupees } from '../../../core/utils/currency.util';
 import { dateKeyToLocalTimestamp, fromDateKey, toDateKey } from '../../../core/utils/date-range.util';
-import { PAYMENT_METHODS, PAYMENT_METHOD_LABELS } from '../../../shared/labels.util';
+import {
+  PAYMENT_METHODS,
+  PAYMENT_METHOD_COLORS,
+  PAYMENT_METHOD_ICONS,
+  PAYMENT_METHOD_LABELS,
+} from '../../../shared/labels.util';
 import { ToastService } from '../../../shared/toast.service';
 import { ConfirmService } from '../../../shared/confirm-dialog/confirm.service';
+import { LoadingService } from '../../../shared/loading/loading.service';
 import { positiveAmountValidator } from './amount.validator';
 
 @Component({
@@ -37,7 +42,6 @@ import { positiveAmountValidator } from './amount.validator';
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
-    MatExpansionModule,
   ],
   templateUrl: './transaction-form.component.html',
   styleUrl: './transaction-form.component.scss',
@@ -45,6 +49,8 @@ import { positiveAmountValidator } from './amount.validator';
 export class TransactionFormComponent implements OnInit {
   readonly paymentMethods = PAYMENT_METHODS;
   readonly paymentMethodLabels = PAYMENT_METHOD_LABELS;
+  readonly paymentMethodIcons = PAYMENT_METHOD_ICONS;
+  readonly paymentMethodColors = PAYMENT_METHOD_COLORS;
   readonly categories = signal<Category[]>([]);
   readonly isEdit = signal(false);
   readonly editingId = signal<string | null>(null);
@@ -57,6 +63,7 @@ export class TransactionFormComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
   private readonly confirmService = inject(ConfirmService);
+  private readonly loadingService = inject(LoadingService);
 
   readonly form = this.fb.nonNullable.group({
     type: this.fb.nonNullable.control<'INCOME' | 'EXPENSE'>('EXPENSE'),
@@ -148,10 +155,10 @@ export class TransactionFormComponent implements OnInit {
 
     try {
       if (this.isEdit() && this.editingId()) {
-        await this.transactionService.update(this.editingId()!, payload);
+        await this.loadingService.wrap(this.transactionService.update(this.editingId()!, payload));
         this.toast.success('Transaction updated');
       } else {
-        await this.transactionService.create(payload);
+        await this.loadingService.wrap(this.transactionService.create(payload));
         this.toast.success('Transaction added');
       }
       this.router.navigate(['/transactions']);
@@ -170,7 +177,7 @@ export class TransactionFormComponent implements OnInit {
       danger: true,
     });
     if (!confirmed) return;
-    await this.transactionService.delete(id);
+    await this.loadingService.wrap(this.transactionService.delete(id));
     this.toast.success('Transaction deleted');
     this.router.navigate(['/transactions']);
   }

@@ -75,7 +75,10 @@
           <mat-label>Payment Method</mat-label>
           <mat-select formControlName="paymentMethod">
             @for (m of paymentMethods; track m) {
-              <mat-option [value]="m">{{ paymentMethodLabels[m] }}</mat-option>
+              <mat-option [value]="m">
+                <mat-icon class="ts-option-icon" [style.color]="paymentMethodColors[m]">{{ paymentMethodIcons[m] }}</mat-icon>
+                {{ paymentMethodLabels[m] }}
+              </mat-option>
             }
           </mat-select>
         </mat-form-field>

@@ -1,0 +1,227 @@
+{
+  "app": "TrackSelavu",
+  "schemaVersion": 1,
+  "exportedAt": 1791902128673,
+  "data": {
+    "transactions": [
+      {
+        "id": "38080ee7-10b4-44e6-98d8-af5e97f45d3c",
+        "type": "INCOME",
+        "amountPaise": 5000000,
+        "categoryId": "e7aeefe8-131a-46a5-b8d7-e42dc9fa287a",
+        "dateKey": "2026-10-01",
+        "occurredAt": 1790827200000,
+        "paymentMethod": "BANK_TRANSFER",
+        "description": "October salary",
+        "merchant": "Acme Corp",
+        "accountId": "e23b2ad6-0f01-4d43-a426-8e081dd4928a",
+        "source": "MANUAL",
+        "classification": "NORMAL",
+        "createdAt": 1791902128673,
+        "updatedAt": 1791902128673
+      },
+      {
+        "id": "2c0c1ecf-9628-4562-ad30-b3acfb742282",
+        "type": "EXPENSE",
+        "amountPaise": 25000,
+        "categoryId": "29bb0835-dae4-4489-bf45-cea05e5e53ee",
+        "dateKey": "2026-10-03",
+        "occurredAt": 1791013500000,
+        "paymentMethod": "UPI",
+        "description": "Lunch with team",
+        "merchant": "ABC Restaurant",
+        "accountId": "e23b2ad6-0f01-4d43-a426-8e081dd4928a",
+        "source": "MANUAL",
+        "classification": "NORMAL",
+        "createdAt": 1791902128673,
+        "updatedAt": 1791902128673
+      },
+      {
+        "id": "e99264a1-c052-4c22-9299-c3e7b38751dc",
+        "type": "EXPENSE",
+        "amountPaise": 120000,
+        "categoryId": "adc05254-b480-4e8f-ba66-9b40f581bc5a",
+        "dateKey": "2026-10-05",
+        "occurredAt": 1791167400000,
+        "paymentMethod": "CASH",
+        "description": "Airport drop",
+        "merchant": "Local Taxi",
+        "accountId": "e23b2ad6-0f01-4d43-a426-8e081dd4928a",
+        "source": "MANUAL",
+        "classification": "NORMAL",
+        "createdAt": 1791902128673,
+        "updatedAt": 1791902128673
+      },
+      {
+        "id": "4b834652-8854-4547-b7c8-cd3b5c4b3b58",
+        "type": "EXPENSE",
+        "amountPaise": 350000,
+        "categoryId": "adc05254-b480-4e8f-ba66-9b40f581bc5a",
+        "dateKey": "2026-10-07",
+        "occurredAt": 1791382500000,
+        "paymentMethod": "CREDIT_CARD",
+        "description": "Train ticket booking",
+        "merchant": "IRCTC",
+        "accountId": "e23b2ad6-0f01-4d43-a426-8e081dd4928a",
+        "source": "MANUAL",
+        "classification": "NORMAL",
+        "createdAt": 1791902128673,
+        "updatedAt": 1791902128673
+      },
+      {
+        "id": "5ba2a500-4858-4183-8510-bcde1dc0dd91",
+        "type": "EXPENSE",
+        "amountPaise": 189000,
+        "categoryId": "42eace9d-0ba4-4188-b56c-39164d8e34fc",
+        "dateKey": "2026-10-09",
+        "occurredAt": 1791550200000,
+        "paymentMethod": "UPI",
+        "description": "Weekly groceries",
+        "merchant": "BigBasket",
+        "accountId": "e23b2ad6-0f01-4d43-a426-8e081dd4928a",
+        "source": "MANUAL",
+        "classification": "NORMAL",
+        "createdAt": 1791902128673,
+        "updatedAt": 1791902128673
+      },
+      {
+        "id": "59e84c19-7e65-4d89-a1f1-e1b47e18f538",
+        "type": "INCOME",
+        "amountPaise": 1500000,
+        "categoryId": "d9f57ece-5a8c-44ab-8139-d70c99fe9015",
+        "dateKey": "2026-10-10",
+        "occurredAt": 1791610200000,
+        "paymentMethod": "UPI",
+        "description": "Website project milestone",
+        "merchant": "Client Payment",
+        "accountId": "e23b2ad6-0f01-4d43-a426-8e081dd4928a",
+        "source": "MANUAL",
+        "classification": "NORMAL",
+        "createdAt": 1791902128673,
+        "updatedAt": 1791902128673
+      },
+      {
+        "id": "48289082-c703-4965-8de4-5dcfd8906ceb",
+        "type": "EXPENSE",
+        "amountPaise": 8950,
+        "categoryId": "29bb0835-dae4-4489-bf45-cea05e5e53ee",
+        "dateKey": "2026-10-12",
+        "occurredAt": 1791802800000,
+        "paymentMethod": "UPI",
+        "description": "Evening snacks",
+        "merchant": "Chai Point",
+        "accountId": "e23b2ad6-0f01-4d43-a426-8e081dd4928a",
+        "source": "MANUAL",
+        "classification": "NORMAL",
+        "createdAt": 1791902128673,
+        "updatedAt": 1791902128673
+      },
+      {
+        "id": "3d7f17e6-2833-4a11-8537-e670f300d6f5",
+        "type": "EXPENSE",
+        "amountPaise": 45000,
+        "categoryId": "29bb0835-dae4-4489-bf45-cea05e5e53ee",
+        "dateKey": "2026-10-13",
+        "occurredAt": 1791901800000,
+        "paymentMethod": "DEBIT_CARD",
+        "description": "Dinner",
+        "merchant": "Pizza Hub",
+        "accountId": "e23b2ad6-0f01-4d43-a426-8e081dd4928a",
+        "source": "MANUAL",
+        "classification": "NORMAL",
+        "createdAt": 1791902128673,
+        "updatedAt": 1791902128673
+      }
+    ],
+    "categories": [
+      {
+        "id": "29bb0835-dae4-4489-bf45-cea05e5e53ee",
+        "name": "Food",
+        "type": "EXPENSE",
+        "icon": "restaurant",
+        "color": "#fb8c00",
+        "isActive": true,
+        "isDefault": false,
+        "createdAt": 1791902128673,
+        "updatedAt": 1791902128673
+      },
+      {
+        "id": "adc05254-b480-4e8f-ba66-9b40f581bc5a",
+        "name": "Travel",
+        "type": "EXPENSE",
+        "icon": "flight",
+        "color": "#3949ab",
+        "isActive": true,
+        "isDefault": false,
+        "createdAt": 1791902128673,
+        "updatedAt": 1791902128673
+      },
+      {
+        "id": "42eace9d-0ba4-4188-b56c-39164d8e34fc",
+        "name": "Groceries",
+        "type": "EXPENSE",
+        "icon": "local_grocery_store",
+        "color": "#43a047",
+        "isActive": true,
+        "isDefault": false,
+        "createdAt": 1791902128673,
+        "updatedAt": 1791902128673
+      },
+      {
+        "id": "e7aeefe8-131a-46a5-b8d7-e42dc9fa287a",
+        "name": "Salary",
+        "type": "INCOME",
+        "icon": "work",
+        "color": "#1976d2",
+        "isActive": true,
+        "isDefault": false,
+        "createdAt": 1791902128673,
+        "updatedAt": 1791902128673
+      },
+      {
+        "id": "d9f57ece-5a8c-44ab-8139-d70c99fe9015",
+        "name": "Freelance",
+        "type": "INCOME",
+        "icon": "laptop_mac",
+        "color": "#26a69a",
+        "isActive": true,
+        "isDefault": false,
+        "createdAt": 1791902128673,
+        "updatedAt": 1791902128673
+      }
+    ],
+    "budgets": [
+      {
+        "id": "4ffc526f-54c0-444d-bb0e-85bb6749a100",
+        "scope": "OVERALL",
+        "period": "MONTHLY",
+        "limitPaise": 2000000,
+        "warningThresholdPercent": 80,
+        "isActive": true,
+        "createdAt": 1791902128673,
+        "updatedAt": 1791902128673
+      }
+    ],
+    "accounts": [
+      {
+        "id": "e23b2ad6-0f01-4d43-a426-8e081dd4928a",
+        "name": "HDFC Bank",
+        "type": "BANK",
+        "numberSuffix": "4521",
+        "isActive": true,
+        "createdAt": 1791902128673,
+        "updatedAt": 1791902128673
+      }
+    ],
+    "smsImports": [],
+    "settings": {
+      "theme": "system",
+      "monthStartDay": 1,
+      "weekStartsOn": "MONDAY",
+      "smsAutoSaveEnabled": false,
+      "smsAutoSaveMinConfidence": 0.9,
+      "merchantCategoryRules": [],
+      "appLockEnabled": false
+    }
+  }
+}

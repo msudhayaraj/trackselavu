@@ -58,7 +58,7 @@
 }
 
 .ts-nav-active {
-  background: rgba(25, 118, 210, 0.1);
+  background: color-mix(in srgb, var(--ts-primary) 12%, transparent);
   color: var(--ts-primary);
 }
 

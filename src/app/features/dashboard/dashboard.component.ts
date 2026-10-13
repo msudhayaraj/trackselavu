@@ -18,6 +18,7 @@ import { formatPaiseAsInr } from '../../core/utils/currency.util';
 import { getPresetRange, todayKey } from '../../core/utils/date-range.util';
 import { ChartCanvasComponent } from '../../shared/chart-canvas/chart-canvas.component';
 import { inrTickCallback } from '../../shared/chart-inr.util';
+import { THEME_COLOR_HEX } from '../../shared/theme-colors';
 
 @Component({
   selector: 'app-dashboard',
@@ -80,7 +81,7 @@ export class DashboardComponent implements OnInit {
     const todayRange = getPresetRange('TODAY', today);
     const monthRange = getPresetRange('THIS_MONTH', today);
 
-    const [todayTotals, monthTotals, categories, recentPage, topCategories, dailySeries, monthlySeries, overallBudget, lastBackupAt] =
+    const [todayTotals, monthTotals, categories, recentPage, topCategories, dailySeries, monthlySeries, overallBudget, lastBackupAt, themeColor] =
       await Promise.all([
         this.reportsService.getTotals(todayRange),
         this.reportsService.getTotals(monthRange),
@@ -91,7 +92,9 @@ export class DashboardComponent implements OnInit {
         this.reportsService.getMonthlySeries(today, 6),
         this.budgetService.getOverallMonthlyUsage(today),
         this.settingsService.get('lastBackupAt'),
+        this.settingsService.get('themeColor'),
       ]);
+    const themeColorHex = THEME_COLOR_HEX[themeColor];
 
     this.categoriesById.set(new Map(categories.map((c) => [c.id, c])));
     this.todayExpensePaise.set(todayTotals.expensePaise);
@@ -148,7 +151,7 @@ export class DashboardComponent implements OnInit {
           {
             label: 'Expense',
             data: monthlySeries.map((p) => p.expensePaise / 100),
-            backgroundColor: '#1976d2',
+            backgroundColor: themeColorHex,
           },
         ],
       },

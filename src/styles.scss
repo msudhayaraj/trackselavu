@@ -42,6 +42,32 @@ $ts-dark-theme: mat.m2-define-dark-theme((
   @include mat.all-component-colors($ts-dark-theme);
 }
 
+// Alternate primary-color presets (Settings → Theme Color), applied as a body class —
+// same live-swap mechanism as .dark-theme above. Accent/warn stay fixed across presets.
+$ts-color-presets: (
+  "teal": mat.$m2-teal-palette,
+  "purple": mat.$m2-purple-palette,
+  "indigo": mat.$m2-indigo-palette,
+  "green": mat.$m2-green-palette,
+  "pink": mat.$m2-pink-palette,
+);
+
+@each $name, $palette in $ts-color-presets {
+  $preset-primary: mat.m2-define-palette($palette, 700, 400, 900);
+
+  .theme-#{$name} {
+    @include mat.all-component-colors(mat.m2-define-light-theme((
+      color: (primary: $preset-primary, accent: $ts-accent, warn: $ts-warn),
+    )));
+  }
+
+  .theme-#{$name}.dark-theme {
+    @include mat.all-component-colors(mat.m2-define-dark-theme((
+      color: (primary: $preset-primary, accent: $ts-accent, warn: $ts-warn),
+    )));
+  }
+}
+
 :root {
   --ts-primary: #1976d2;
   --ts-accent: #fb8c00;

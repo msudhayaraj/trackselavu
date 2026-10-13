@@ -45,7 +45,10 @@
         <mat-select formControlName="paymentMethod">
           <mat-option value="">All</mat-option>
           @for (m of paymentMethods; track m) {
-            <mat-option [value]="m">{{ paymentMethodLabels[m] }}</mat-option>
+            <mat-option [value]="m">
+              <mat-icon class="ts-option-icon" [style.color]="paymentMethodColors[m]">{{ paymentMethodIcons[m] }}</mat-icon>
+              {{ paymentMethodLabels[m] }}
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -122,7 +125,9 @@
         <div class="ts-transaction-info">
           <span class="ts-transaction-title">{{ t.merchant || t.description || categoryFor(t)?.name || 'Transaction' }}</span>
           <span class="ts-muted ts-transaction-meta">
-            {{ t.dateKey }} · {{ categoryFor(t)?.name }} · {{ paymentMethodLabels[t.paymentMethod] }}
+            {{ t.dateKey }} · {{ categoryFor(t)?.name }} ·
+            <mat-icon class="ts-inline-icon" [style.color]="paymentMethodColors[t.paymentMethod]">{{ paymentMethodIcons[t.paymentMethod] }}</mat-icon>
+            {{ paymentMethodLabels[t.paymentMethod] }}
             @if (t.source === 'SMS') { · <mat-icon class="ts-inline-icon">sms</mat-icon> }
           </span>
         </div>

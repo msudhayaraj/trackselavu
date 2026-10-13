@@ -1,5 +1,15 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationSkipped,
+  NavigationStart,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -9,10 +19,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CategoryService } from './core/services/category.service';
 import { SettingsService } from './core/services/settings.service';
 import { sha256Hex } from './core/utils/hash.util';
+import { IconSpinnerComponent } from './shared/icon-spinner/icon-spinner.component';
+import { LoadingOverlayComponent } from './shared/loading/loading-overlay.component';
+import { LoadingService } from './shared/loading/loading.service';
+import { THEME_COLOR_HEX, THEME_COLOR_NAMES } from './shared/theme-colors';
+import { AppSettings } from './core/models/settings.model';
 
 interface NavItem {
   label: string;
@@ -48,7 +62,8 @@ const NAV_ITEMS: NavItem[] = [
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatProgressSpinnerModule,
+    IconSpinnerComponent,
+    LoadingOverlayComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -70,6 +85,8 @@ export class AppComponent implements OnInit {
     private readonly categoryService: CategoryService,
     private readonly settingsService: SettingsService,
     private readonly breakpointObserver: BreakpointObserver,
+    private readonly router: Router,
+    private readonly loadingService: LoadingService,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -78,10 +95,23 @@ export class AppComponent implements OnInit {
       this.sidenavOpened.set(!state.matches);
     });
 
-    await this.categoryService.seedDefaultsIfEmpty();
-    await this.applyTheme();
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.loadingService.show();
+      } else if (
+        event instanceof NavigationEnd ||
+        event instanceof NavigationCancel ||
+        event instanceof NavigationError ||
+        event instanceof NavigationSkipped
+      ) {
+        this.loadingService.hide();
+      }
+    });
 
+    await this.categoryService.seedDefaultsIfEmpty();
     const settings = await this.settingsService.getAll();
+    this.applyTheme(settings);
+
     if (settings.appLockEnabled && settings.appLockPinHash) {
       this.expectedPinHash = settings.appLockPinHash;
       this.locked.set(true);
@@ -105,10 +135,17 @@ export class AppComponent implements OnInit {
     if (this.sidenavMode() === 'over') sidenav.close();
   }
 
-  private async applyTheme(): Promise<void> {
-    const theme = await this.settingsService.get('theme');
+  private applyTheme(settings: AppSettings): void {
     const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
-    const useDark = theme === 'dark' || (theme === 'system' && prefersDark);
+    const useDark = settings.theme === 'dark' || (settings.theme === 'system' && prefersDark);
     document.body.classList.toggle('dark-theme', !!useDark);
+
+    for (const name of THEME_COLOR_NAMES) {
+      document.body.classList.remove(`theme-${name}`);
+    }
+    if (settings.themeColor !== 'blue') {
+      document.body.classList.add(`theme-${settings.themeColor}`);
+    }
+    document.documentElement.style.setProperty('--ts-primary', THEME_COLOR_HEX[settings.themeColor]);
   }
 }

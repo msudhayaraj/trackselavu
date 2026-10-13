@@ -18,6 +18,7 @@ export const DEFAULT_EXPENSE_CATEGORIES: NewCategory[] = [
   { name: 'Travel', type: 'EXPENSE', icon: 'flight', color: '#3949ab', isActive: true, isDefault: true },
   { name: 'Rent', type: 'EXPENSE', icon: 'home', color: '#546e7a', isActive: true, isDefault: true },
   { name: 'Groceries', type: 'EXPENSE', icon: 'local_grocery_store', color: '#43a047', isActive: true, isDefault: true },
+  { name: 'Milk', type: 'EXPENSE', icon: 'local_drink', color: '#29b6f6', isActive: true, isDefault: true },
   { name: 'Medical', type: 'EXPENSE', icon: 'local_hospital', color: '#e53935', isActive: true, isDefault: true },
   { name: 'Entertainment', type: 'EXPENSE', icon: 'movie', color: '#d81b60', isActive: true, isDefault: true },
   { name: 'Education', type: 'EXPENSE', icon: 'school', color: '#1e88e5', isActive: true, isDefault: true },

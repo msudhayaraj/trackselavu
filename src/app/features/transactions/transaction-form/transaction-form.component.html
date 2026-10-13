@@ -58,7 +58,10 @@
         <mat-label>Payment Method</mat-label>
         <mat-select formControlName="paymentMethod">
           @for (m of paymentMethods; track m) {
-            <mat-option [value]="m">{{ paymentMethodLabels[m] }}</mat-option>
+            <mat-option [value]="m">
+              <mat-icon class="ts-option-icon" [style.color]="paymentMethodColors[m]">{{ paymentMethodIcons[m] }}</mat-icon>
+              {{ paymentMethodLabels[m] }}
+            </mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -72,23 +75,6 @@
         <mat-label>Description / Notes</mat-label>
         <textarea matInput formControlName="description" rows="2"></textarea>
       </mat-form-field>
-
-      <mat-expansion-panel class="ts-advanced-panel">
-        <mat-expansion-panel-header>Advanced</mat-expansion-panel-header>
-        <mat-form-field appearance="outline" class="ts-full-width">
-          <mat-label>Classification</mat-label>
-          <mat-select formControlName="classification">
-            <mat-option value="NORMAL">Normal</mat-option>
-            <mat-option value="REFUND">Refund</mat-option>
-            <mat-option value="TRANSFER">Transfer (between own accounts)</mat-option>
-            <mat-option value="CREDIT_CARD_PAYMENT">Credit Card Bill Payment</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <p class="ts-muted ts-hint">
-          Refunds, transfers, and credit-card bill payments are excluded from income/expense totals
-          to avoid double counting.
-        </p>
-      </mat-expansion-panel>
 
       <div class="ts-form-actions">
         @if (isEdit()) {

@@ -12,6 +12,7 @@ import { Budget, BudgetUsage, NewBudget } from '../../core/models/budget.model';
 import { formatPaiseAsInr } from '../../core/utils/currency.util';
 import { ConfirmService } from '../../shared/confirm-dialog/confirm.service';
 import { ToastService } from '../../shared/toast.service';
+import { LoadingService } from '../../shared/loading/loading.service';
 import { BudgetFormDialogComponent, BudgetFormDialogData } from './budget-form-dialog/budget-form-dialog.component';
 
 @Component({
@@ -27,6 +28,7 @@ export class BudgetsComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly confirmService = inject(ConfirmService);
   private readonly toast = inject(ToastService);
+  private readonly loadingService = inject(LoadingService);
 
   readonly usages = signal<BudgetUsage[]>([]);
   readonly loading = signal(true);
@@ -57,7 +59,7 @@ export class BudgetsComponent implements OnInit {
     const ref = this.dialog.open(BudgetFormDialogComponent, { width: '420px', data });
     const result: NewBudget | undefined = await firstValueFrom(ref.afterClosed());
     if (!result) return;
-    await this.budgetService.create(result);
+    await this.loadingService.wrap(this.budgetService.create(result));
     this.toast.success('Budget created');
     await this.reload();
   }
@@ -68,7 +70,7 @@ export class BudgetsComponent implements OnInit {
     const ref = this.dialog.open(BudgetFormDialogComponent, { width: '420px', data });
     const result: NewBudget | undefined = await firstValueFrom(ref.afterClosed());
     if (!result) return;
-    await this.budgetService.update(budget.id, result);
+    await this.loadingService.wrap(this.budgetService.update(budget.id, result));
     this.toast.success('Budget updated');
     await this.reload();
   }
@@ -81,7 +83,7 @@ export class BudgetsComponent implements OnInit {
       danger: true,
     });
     if (!confirmed) return;
-    await this.budgetService.delete(budget.id);
+    await this.loadingService.wrap(this.budgetService.delete(budget.id));
     this.toast.success('Budget deleted');
     await this.reload();
   }

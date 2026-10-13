@@ -7,7 +7,9 @@ import { ChartConfiguration } from 'chart.js/auto';
 import { ReportsService } from '../../core/services/reports.service';
 import { CategoryService } from '../../core/services/category.service';
 import { BudgetService } from '../../core/services/budget.service';
+import { SettingsService } from '../../core/services/settings.service';
 import { TransactionType } from '../../core/models/transaction.model';
+import { THEME_COLOR_HEX, hexToRgba } from '../../shared/theme-colors';
 import {
   DateRange,
   ReportPreset,
@@ -38,7 +40,9 @@ export class ChartsComponent implements OnInit {
   private readonly reportsService = inject(ReportsService);
   private readonly categoryService = inject(CategoryService);
   private readonly budgetService = inject(BudgetService);
+  private readonly settingsService = inject(SettingsService);
   private readonly router = inject(Router);
+  private primaryHex = THEME_COLOR_HEX.blue;
 
   readonly periodPreset = signal<ReportPreset>('THIS_MONTH');
   readonly typeFilter = signal<TransactionType>('EXPENSE');
@@ -71,6 +75,7 @@ export class ChartsComponent implements OnInit {
   private currentCategoryIds: string[] = [];
 
   async ngOnInit(): Promise<void> {
+    this.primaryHex = THEME_COLOR_HEX[await this.settingsService.get('themeColor')];
     await this.reloadAll();
   }
 
@@ -119,8 +124,8 @@ export class ChartsComponent implements OnInit {
           {
             label: 'Income',
             data: series.map((p) => p.incomePaise / 100),
-            borderColor: '#1976d2',
-            backgroundColor: 'rgba(25,118,210,0.1)',
+            borderColor: this.primaryHex,
+            backgroundColor: hexToRgba(this.primaryHex, 0.1),
             fill: true,
             tension: 0.3,
           },
@@ -144,7 +149,7 @@ export class ChartsComponent implements OnInit {
       type: 'bar',
       data: {
         labels: series.map((p) => p.label),
-        datasets: [{ label: 'Expense', data: series.map((p) => p.expensePaise / 100), backgroundColor: '#1976d2' }],
+        datasets: [{ label: 'Expense', data: series.map((p) => p.expensePaise / 100), backgroundColor: this.primaryHex }],
       },
       options: {
         responsive: true,
@@ -202,7 +207,7 @@ export class ChartsComponent implements OnInit {
       data: {
         labels: series.map((p) => p.label),
         datasets: [
-          { label: 'Income', data: series.map((p) => p.incomePaise / 100), backgroundColor: '#1976d2' },
+          { label: 'Income', data: series.map((p) => p.incomePaise / 100), backgroundColor: this.primaryHex },
           { label: 'Expense', data: series.map((p) => p.expensePaise / 100), backgroundColor: '#fb8c00' },
         ],
       },
@@ -227,7 +232,7 @@ export class ChartsComponent implements OnInit {
           {
             label: 'Actual',
             data: usages.map((u) => u.spentPaise / 100),
-            backgroundColor: usages.map((u) => (u.isExceeded ? '#e53935' : '#1976d2')),
+            backgroundColor: usages.map((u) => (u.isExceeded ? '#e53935' : this.primaryHex)),
           },
         ],
       },

@@ -11,6 +11,7 @@ import { CategoryService, CategoryInUseError } from '../../core/services/categor
 import { Category, NewCategory } from '../../core/models/category.model';
 import { ConfirmService } from '../../shared/confirm-dialog/confirm.service';
 import { ToastService } from '../../shared/toast.service';
+import { LoadingService } from '../../shared/loading/loading.service';
 import {
   CategoryFormDialogComponent,
   CategoryFormDialogData,
@@ -37,6 +38,7 @@ export class CategoriesComponent implements OnInit {
     private readonly dialog: MatDialog,
     private readonly confirmService: ConfirmService,
     private readonly toast: ToastService,
+    private readonly loadingService: LoadingService,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -61,7 +63,7 @@ export class CategoriesComponent implements OnInit {
     const ref = this.dialog.open(CategoryFormDialogComponent, { width: '420px', data });
     const result: NewCategory | undefined = await firstValueFrom(ref.afterClosed());
     if (!result) return;
-    await this.categoryService.create(result);
+    await this.loadingService.wrap(this.categoryService.create(result));
     this.toast.success('Category created');
     await this.reload();
   }
@@ -71,13 +73,13 @@ export class CategoriesComponent implements OnInit {
     const ref = this.dialog.open(CategoryFormDialogComponent, { width: '420px', data });
     const result: NewCategory | undefined = await firstValueFrom(ref.afterClosed());
     if (!result) return;
-    await this.categoryService.update(category.id, result);
+    await this.loadingService.wrap(this.categoryService.update(category.id, result));
     this.toast.success('Category updated');
     await this.reload();
   }
 
   async toggleActive(category: Category): Promise<void> {
-    await this.categoryService.setActive(category.id, !category.isActive);
+    await this.loadingService.wrap(this.categoryService.setActive(category.id, !category.isActive));
     await this.reload();
   }
 
@@ -98,7 +100,7 @@ export class CategoriesComponent implements OnInit {
       const ref = this.dialog.open(ReassignCategoryDialogComponent, { width: '420px', data });
       const targetId: string | undefined = await firstValueFrom(ref.afterClosed());
       if (!targetId) return;
-      await this.categoryService.reassignAndDelete(category.id, targetId);
+      await this.loadingService.wrap(this.categoryService.reassignAndDelete(category.id, targetId));
       this.toast.success(`Moved ${usageCount} transaction(s) and deleted "${category.name}"`);
       await this.reload();
       return;
@@ -112,7 +114,7 @@ export class CategoriesComponent implements OnInit {
     });
     if (!confirmed) return;
     try {
-      await this.categoryService.delete(category.id);
+      await this.loadingService.wrap(this.categoryService.delete(category.id));
       this.toast.success('Category deleted');
       await this.reload();
     } catch (err) {

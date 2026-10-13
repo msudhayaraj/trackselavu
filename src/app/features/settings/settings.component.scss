@@ -10,6 +10,38 @@
   font-size: 0.8rem;
 }
 
+.ts-theme-color-label {
+  margin: 16px 0 6px;
+}
+
+.ts-theme-color-swatches {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ts-theme-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+
+  mat-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+  }
+
+  &.ts-theme-swatch-selected {
+    border-color: var(--ts-text);
+  }
+}
+
 .ts-confidence-row {
   margin-top: 8px;
 

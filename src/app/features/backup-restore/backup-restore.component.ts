@@ -14,6 +14,7 @@ import { BackupFile, BackupPreview, RestoreMode } from '../../core/models/backup
 import { readFileAsText } from '../../shared/download.util';
 import { ConfirmService } from '../../shared/confirm-dialog/confirm.service';
 import { ToastService } from '../../shared/toast.service';
+import { LoadingService } from '../../shared/loading/loading.service';
 
 @Component({
   selector: 'app-backup-restore',
@@ -30,6 +31,7 @@ export class BackupRestoreComponent implements OnInit {
   private readonly settingsService = inject(SettingsService);
   private readonly confirmService = inject(ConfirmService);
   private readonly toast = inject(ToastService);
+  private readonly loadingService = inject(LoadingService);
 
   readonly lastBackupLabel = signal('Never backed up');
   readonly transactionCount = signal(0);
@@ -53,6 +55,7 @@ export class BackupRestoreComponent implements OnInit {
 
   async exportJsonBackup(): Promise<void> {
     this.exporting.set(true);
+    this.loadingService.show();
     try {
       await this.backupService.downloadBackup();
       this.toast.success('Backup downloaded');
@@ -61,14 +64,14 @@ export class BackupRestoreComponent implements OnInit {
       this.toast.error('Could not create backup');
     } finally {
       this.exporting.set(false);
+      this.loadingService.hide();
     }
   }
 
   async exportCsv(): Promise<void> {
-    const [transactions, categories] = await Promise.all([
-      this.transactionService.getAll(),
-      this.categoryService.getAll(),
-    ]);
+    const [transactions, categories] = await this.loadingService.wrap(
+      Promise.all([this.transactionService.getAll(), this.categoryService.getAll()]),
+    );
     if (transactions.length === 0) {
       this.toast.error('No transactions to export');
       return;
@@ -123,6 +126,7 @@ export class BackupRestoreComponent implements OnInit {
     }
 
     this.restoring.set(true);
+    this.loadingService.show();
     try {
       const result = await this.backupService.restore(backup, mode);
       this.toast.success(
@@ -135,6 +139,7 @@ export class BackupRestoreComponent implements OnInit {
       this.toast.error('Restore failed — your existing data was not changed.');
     } finally {
       this.restoring.set(false);
+      this.loadingService.hide();
     }
   }
 }

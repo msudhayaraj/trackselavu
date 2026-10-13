@@ -8,6 +8,26 @@
       <mat-button-toggle value="dark">Dark</mat-button-toggle>
       <mat-button-toggle value="system">System</mat-button-toggle>
     </mat-button-toggle-group>
+
+    <p class="ts-muted ts-theme-color-label">Theme Color</p>
+    <div class="ts-theme-color-swatches">
+      @for (c of themeColors; track c) {
+        <button
+          type="button"
+          class="ts-theme-swatch"
+          [class.ts-theme-swatch-selected]="themeColor() === c"
+          [style.background]="themeColorHex[c]"
+          [attr.aria-label]="themeColorLabels[c]"
+          [title]="themeColorLabels[c]"
+          (click)="setThemeColor(c)"
+        >
+          @if (themeColor() === c) {
+            <mat-icon>check</mat-icon>
+          }
+        </button>
+      }
+    </div>
+    <p class="ts-muted ts-hint">Changing the theme color reloads the app so every screen picks it up.</p>
   </div>
 
   <div class="ts-card">
