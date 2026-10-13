@@ -1,0 +1,44 @@
+.ts-controls-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 12px 0 16px;
+}
+
+.ts-charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+
+  h3 {
+    margin-top: 0;
+  }
+}
+
+.ts-legend {
+  margin-top: 8px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.ts-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+  font-size: 0.85rem;
+}
+
+.ts-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ts-legend-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

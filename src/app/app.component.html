@@ -1,0 +1,73 @@
+@if (!ready()) {
+  <div class="ts-boot-loader">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading TrackSelavu…</p>
+  </div>
+} @else if (locked()) {
+  <div class="ts-lock-screen">
+    <mat-icon class="ts-lock-icon">lock</mat-icon>
+    <h2>{{ title }}</h2>
+    <p class="ts-muted">Enter your PIN to continue</p>
+    <mat-form-field appearance="outline">
+      <mat-label>PIN</mat-label>
+      <input
+        matInput
+        type="password"
+        inputmode="numeric"
+        [ngModel]="pinAttempt()"
+        (ngModelChange)="pinAttempt.set($event)"
+        (keyup.enter)="unlock()"
+        maxlength="8"
+      />
+    </mat-form-field>
+    @if (pinError()) {
+      <p class="ts-amount-expense">Incorrect PIN. Try again.</p>
+    }
+    <button mat-flat-button color="primary" (click)="unlock()">Unlock</button>
+  </div>
+} @else {
+  <mat-sidenav-container class="ts-shell">
+    <mat-sidenav
+      #sidenav
+      [mode]="sidenavMode()"
+      [opened]="sidenavOpened()"
+      class="ts-sidenav"
+    >
+      <div class="ts-brand">
+        <mat-icon>account_balance_wallet</mat-icon>
+        <span>{{ title }}</span>
+      </div>
+      <p class="ts-tagline">{{ tagline }}</p>
+      <mat-nav-list>
+        @for (item of navItems; track item.path) {
+          <a
+            mat-list-item
+            [routerLink]="item.path"
+            routerLinkActive="ts-nav-active"
+            [routerLinkActiveOptions]="{ exact: item.path === '/dashboard' }"
+            (click)="closeIfMobile(sidenav)"
+          >
+            <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+            <span matListItemTitle>{{ item.label }}</span>
+          </a>
+        }
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <mat-toolbar color="primary" class="ts-toolbar">
+        <button mat-icon-button (click)="sidenav.toggle()" aria-label="Toggle navigation">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span class="ts-toolbar-title">{{ title }}</span>
+        <span class="ts-toolbar-spacer"></span>
+        <button mat-icon-button routerLink="/transactions/new" aria-label="Quick add transaction">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-toolbar>
+      <main class="ts-content">
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+}

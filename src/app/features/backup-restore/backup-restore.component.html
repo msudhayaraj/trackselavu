@@ -1,0 +1,67 @@
+<div class="ts-page ts-narrow">
+  <h2>Backup &amp; Restore</h2>
+
+  <div class="ts-card">
+    <h3>Export</h3>
+    <p class="ts-muted">
+      {{ transactionCount() }} transaction(s) stored on this device. Last backup: {{ lastBackupLabel() }}.
+    </p>
+    <p class="ts-muted ts-hint">
+      Backups never leave this device unless you choose to share or upload the exported file yourself.
+    </p>
+    <div class="ts-export-actions">
+      <button mat-flat-button color="primary" [disabled]="exporting()" (click)="exportJsonBackup()">
+        <mat-icon>download</mat-icon> Export Full Backup (JSON)
+      </button>
+      <button mat-stroked-button (click)="exportCsv()">
+        <mat-icon>table_view</mat-icon> Export Transactions (CSV)
+      </button>
+    </div>
+  </div>
+
+  <div class="ts-card">
+    <h3>Restore</h3>
+    <p class="ts-muted">Choose a TrackSelavu backup JSON file to preview and restore.</p>
+    <input type="file" accept="application/json,.json" (change)="onFileSelected($event)" />
+
+    @if (fileError()) {
+      <p class="ts-amount-expense">{{ fileError() }}</p>
+    }
+
+    @if (preview(); as p) {
+      <div class="ts-preview-box">
+        <h4>Backup Preview</h4>
+        <p class="ts-muted">Exported: {{ p.exportedAt | date: 'medium' }} · Schema v{{ p.schemaVersion }}</p>
+        <ul class="ts-preview-counts">
+          <li>{{ p.counts.transactions }} transactions</li>
+          <li>{{ p.counts.categories }} categories</li>
+          <li>{{ p.counts.budgets }} budgets</li>
+          <li>{{ p.counts.accounts }} accounts</li>
+          <li>{{ p.counts.smsImports }} SMS import records</li>
+        </ul>
+        @if (p.duplicateTransactionIds > 0 || p.duplicateSmsFingerprints > 0) {
+          <p class="ts-muted">
+            {{ p.duplicateTransactionIds }} transaction(s) and {{ p.duplicateSmsFingerprints }} SMS record(s)
+            already exist and will be skipped in Merge mode.
+          </p>
+        }
+
+        <mat-radio-group
+          [ngModel]="restoreMode()"
+          (ngModelChange)="restoreMode.set($event)"
+          class="ts-restore-mode"
+        >
+          <mat-radio-button value="MERGE">Merge — keep existing data, add new records</mat-radio-button>
+          <mat-radio-button value="REPLACE">Replace — delete everything and restore from this file</mat-radio-button>
+        </mat-radio-group>
+
+        <div class="ts-restore-actions">
+          <button mat-button (click)="cancelRestore()">Cancel</button>
+          <button mat-flat-button color="primary" [disabled]="restoring()" (click)="confirmRestore()">
+            Restore
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

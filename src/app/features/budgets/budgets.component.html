@@ -1,0 +1,46 @@
+<div class="ts-page">
+  <div class="ts-header-row">
+    <h2>Budgets</h2>
+    <button mat-flat-button color="primary" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon> New Budget
+    </button>
+  </div>
+
+  @if (!loading() && usages().length === 0) {
+    <div class="ts-card ts-empty-state">
+      <mat-icon class="ts-empty-icon">savings</mat-icon>
+      <p>No budgets yet. Set an overall monthly budget or a per-category limit to track your spending.</p>
+    </div>
+  }
+
+  <div class="ts-budget-grid">
+    @for (u of usages(); track u.budget.id) {
+      <div class="ts-card ts-budget-item">
+        <div class="ts-budget-item-header">
+          <strong>{{ u.budget.scope === 'OVERALL' ? 'Overall' : u.categoryName }}</strong>
+          <span class="ts-muted">{{ u.budget.period === 'MONTHLY' ? 'Monthly' : 'Weekly' }} · {{ u.periodLabel }}</span>
+        </div>
+        <mat-progress-bar [value]="u.percentUsed > 100 ? 100 : u.percentUsed" [color]="progressColor(u)"></mat-progress-bar>
+        <div class="ts-budget-item-footer">
+          <span>{{ formatInr(u.spentPaise) }} of {{ formatInr(u.limitPaise) }}</span>
+          <span [class.ts-amount-expense]="u.isExceeded">{{ u.percentUsed | number: '1.0-0' }}%</span>
+        </div>
+        @if (u.isExceeded) {
+          <p class="ts-amount-expense ts-budget-status">Budget exceeded by {{ formatInr(-u.remainingPaise) }}</p>
+        } @else if (u.isWarning) {
+          <p class="ts-amount-expense ts-budget-status">Approaching limit — {{ formatInr(u.remainingPaise) }} remaining</p>
+        } @else {
+          <p class="ts-muted ts-budget-status">{{ formatInr(u.remainingPaise) }} remaining</p>
+        }
+        <div class="ts-budget-actions">
+          <button mat-icon-button (click)="openEditDialog(u.budget)" aria-label="Edit">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="deleteBudget(u.budget)" aria-label="Delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

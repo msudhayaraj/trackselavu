@@ -1,0 +1,19 @@
+.ts-narrow {
+  max-width: 600px;
+}
+
+.ts-card {
+  margin-bottom: 16px;
+}
+
+.ts-hint {
+  font-size: 0.8rem;
+}
+
+.ts-confidence-row {
+  margin-top: 8px;
+
+  mat-slider {
+    width: 100%;
+  }
+}

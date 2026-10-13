@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Budget' : 'New Budget' }}</h2>
+<form [formGroup]="form" (ngSubmit)="save()">
+  <mat-dialog-content>
+    <mat-button-toggle-group formControlName="scope" class="ts-full-width" [disabled]="isEdit">
+      <mat-button-toggle value="OVERALL">Overall</mat-button-toggle>
+      <mat-button-toggle value="CATEGORY">Category</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    @if (form.controls.scope.value === 'CATEGORY') {
+      <mat-form-field appearance="outline" class="ts-full-width">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="categoryId">
+          @for (c of data.expenseCategories; track c.id) {
+            <mat-option [value]="c.id">
+              <mat-icon class="ts-option-icon" [style.color]="c.color">{{ c.icon }}</mat-icon>
+              {{ c.name }}
+            </mat-option>
+          }
+        </mat-select>
+        @if (form.controls.categoryId.hasError('required')) {
+          <mat-error>Select a category</mat-error>
+        }
+      </mat-form-field>
+    }
+
+    <mat-button-toggle-group formControlName="period" class="ts-full-width" [disabled]="isEdit">
+      <mat-button-toggle value="MONTHLY">Monthly</mat-button-toggle>
+      <mat-button-toggle value="WEEKLY">Weekly</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-form-field appearance="outline" class="ts-full-width">
+      <mat-label>Budget Limit (₹)</mat-label>
+      <input matInput formControlName="limit" inputmode="decimal" />
+      @if (form.controls.limit.hasError('required')) {
+        <mat-error>Limit is required</mat-error>
+      }
+      @if (form.controls.limit.hasError('invalid')) {
+        <mat-error>Enter a valid positive amount</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="ts-full-width">
+      <mat-label>Warning Threshold (%)</mat-label>
+      <input matInput type="number" min="1" max="100" formControlName="warningThresholdPercent" />
+    </mat-form-field>
+
+    <mat-slide-toggle formControlName="isActive">Active</mat-slide-toggle>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button type="button" mat-button mat-dialog-close>Cancel</button>
+    <button type="submit" mat-flat-button color="primary">Save</button>
+  </mat-dialog-actions>
+</form>

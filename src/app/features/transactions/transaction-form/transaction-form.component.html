@@ -1,0 +1,107 @@
+<div class="ts-page ts-narrow">
+  <div class="ts-card">
+    <h2>{{ isEdit() ? 'Edit Transaction' : 'Add Transaction' }}</h2>
+    @if (sourceIsSms()) {
+      <p class="ts-muted"><mat-icon class="ts-inline-icon">sms</mat-icon> Detected from SMS — review and confirm the details below.</p>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <mat-button-toggle-group formControlName="type" class="ts-full-width ts-type-toggle">
+        <mat-button-toggle value="EXPENSE">Expense</mat-button-toggle>
+        <mat-button-toggle value="INCOME">Income</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <mat-form-field appearance="outline" class="ts-full-width">
+        <mat-label>Amount (₹)</mat-label>
+        <input matInput formControlName="amount" inputmode="decimal" placeholder="0.00" />
+        @if (form.controls.amount.hasError('required')) {
+          <mat-error>Amount is required</mat-error>
+        }
+        @if (form.controls.amount.hasError('nonPositive')) {
+          <mat-error>Amount must be greater than zero</mat-error>
+        }
+        @if (form.controls.amount.hasError('invalidAmount')) {
+          <mat-error>Enter a valid number</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="ts-full-width">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="categoryId">
+          @for (c of categories(); track c.id) {
+            <mat-option [value]="c.id">
+              <mat-icon class="ts-option-icon" [style.color]="c.color">{{ c.icon }}</mat-icon>
+              {{ c.name }}
+            </mat-option>
+          }
+        </mat-select>
+        @if (form.controls.categoryId.hasError('required')) {
+          <mat-error>Select a category</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="ts-date-time-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="date" />
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Time</mat-label>
+          <input matInput type="time" formControlName="time" />
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="ts-full-width">
+        <mat-label>Payment Method</mat-label>
+        <mat-select formControlName="paymentMethod">
+          @for (m of paymentMethods; track m) {
+            <mat-option [value]="m">{{ paymentMethodLabels[m] }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="ts-full-width">
+        <mat-label>Merchant / Payee</mat-label>
+        <input matInput formControlName="merchant" placeholder="e.g. ABC Restaurant" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="ts-full-width">
+        <mat-label>Description / Notes</mat-label>
+        <textarea matInput formControlName="description" rows="2"></textarea>
+      </mat-form-field>
+
+      <mat-expansion-panel class="ts-advanced-panel">
+        <mat-expansion-panel-header>Advanced</mat-expansion-panel-header>
+        <mat-form-field appearance="outline" class="ts-full-width">
+          <mat-label>Classification</mat-label>
+          <mat-select formControlName="classification">
+            <mat-option value="NORMAL">Normal</mat-option>
+            <mat-option value="REFUND">Refund</mat-option>
+            <mat-option value="TRANSFER">Transfer (between own accounts)</mat-option>
+            <mat-option value="CREDIT_CARD_PAYMENT">Credit Card Bill Payment</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <p class="ts-muted ts-hint">
+          Refunds, transfers, and credit-card bill payments are excluded from income/expense totals
+          to avoid double counting.
+        </p>
+      </mat-expansion-panel>
+
+      <div class="ts-form-actions">
+        @if (isEdit()) {
+          <button type="button" mat-stroked-button color="warn" (click)="deleteTransaction()">
+            <mat-icon>delete</mat-icon> Delete
+          </button>
+        }
+        <span class="ts-spacer"></span>
+        <button type="button" mat-button (click)="cancel()">Cancel</button>
+        <button type="submit" mat-flat-button color="primary">
+          {{ isEdit() ? 'Save Changes' : 'Add Transaction' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,93 @@
+@use '@angular/material' as mat;
+@use 'material-icons/iconfont/filled.css';
+@use '@fontsource/roboto/300.css' as roboto-300;
+@use '@fontsource/roboto/400.css' as roboto-400;
+@use '@fontsource/roboto/500.css' as roboto-500;
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@include mat.core();
+
+// TrackSelavu brand palette: deep teal primary, warm orange accent.
+$ts-primary: mat.m2-define-palette(mat.$m2-teal-palette, 700, 400, 900);
+$ts-accent: mat.m2-define-palette(mat.$m2-orange-palette, 600, 300, 800);
+$ts-warn: mat.m2-define-palette(mat.$m2-red-palette);
+
+$ts-light-theme: mat.m2-define-light-theme((
+  color: (
+    primary: $ts-primary,
+    accent: $ts-accent,
+    warn: $ts-warn,
+  ),
+  typography: mat.m2-define-typography-config(),
+  density: 0,
+));
+
+$ts-dark-theme: mat.m2-define-dark-theme((
+  color: (
+    primary: $ts-primary,
+    accent: $ts-accent,
+    warn: $ts-warn,
+  ),
+));
+
+@include mat.all-component-themes($ts-light-theme);
+
+.dark-theme {
+  @include mat.all-component-colors($ts-dark-theme);
+}
+
+:root {
+  --ts-primary: #00695c;
+  --ts-accent: #fb8c00;
+  --ts-bg: #f4f6f5;
+  --ts-card-bg: #ffffff;
+  --ts-text: #1b1f1e;
+  --ts-text-muted: #5f6b68;
+  --ts-success: #2e7d32;
+  --ts-danger: #c62828;
+  --ts-warning: #f9a825;
+  --ts-border-radius: 14px;
+  --ts-spacing: 16px;
+}
+
+.dark-theme {
+  --ts-bg: #121615;
+  --ts-card-bg: #1c2120;
+  --ts-text: #eef2f1;
+  --ts-text-muted: #a2aeac;
+  --ts-success: #66bb6a;
+  --ts-danger: #ef5350;
+  --ts-warning: #ffca28;
+}
+
+body {
+  background: var(--ts-bg);
+  color: var(--ts-text);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.ts-card {
+  background: var(--ts-card-bg);
+  border-radius: var(--ts-border-radius);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: var(--ts-spacing);
+}
+
+.ts-amount-income { color: var(--ts-success); font-weight: 600; }
+.ts-amount-expense { color: var(--ts-danger); font-weight: 600; }
+.ts-muted { color: var(--ts-text-muted); }
+
+.ts-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+* { box-sizing: border-box; }

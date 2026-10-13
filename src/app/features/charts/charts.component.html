@@ -1,0 +1,62 @@
+<div class="ts-page">
+  <h2>Charts &amp; Analytics</h2>
+
+  <div class="ts-controls-row">
+    <mat-button-toggle-group [value]="periodPreset()" (change)="onPeriodChange($event.value)">
+      @for (p of periods; track p.value) {
+        <mat-button-toggle [value]="p.value">{{ p.label }}</mat-button-toggle>
+      }
+    </mat-button-toggle-group>
+
+    <mat-button-toggle-group [value]="typeFilter()" (change)="onTypeFilterChange($event.value)">
+      <mat-button-toggle value="EXPENSE">Expense</mat-button-toggle>
+      <mat-button-toggle value="INCOME">Income</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <div class="ts-charts-grid">
+    <div class="ts-card">
+      <h3>Daily Trend</h3>
+      <app-chart-canvas [config]="trendConfig" [isEmpty]="trendEmpty" [height]="240"></app-chart-canvas>
+    </div>
+
+    <div class="ts-card">
+      <h3>Monthly Expense Trend (6 months)</h3>
+      <app-chart-canvas [config]="monthlyTrendConfig" [isEmpty]="monthlyTrendEmpty" [height]="240"></app-chart-canvas>
+    </div>
+
+    <div class="ts-card">
+      <h3>Category Breakdown</h3>
+      <app-chart-canvas
+        [config]="categoryConfig"
+        [isEmpty]="categoryEmpty"
+        [height]="240"
+        [onSegmentClick]="onCategorySegmentClick.bind(this)"
+      ></app-chart-canvas>
+      <div class="ts-legend">
+        @for (l of categoryLegend; track l.name) {
+          <div class="ts-legend-row">
+            <span class="ts-legend-dot" [style.background]="l.color"></span>
+            <span class="ts-legend-name">{{ l.name }}</span>
+            <span class="ts-muted">{{ l.percent | number: '1.0-0' }}%</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="ts-card">
+      <h3>Income vs Expenses (6 months)</h3>
+      <app-chart-canvas [config]="incomeVsExpenseConfig" [isEmpty]="incomeVsExpenseEmpty" [height]="240"></app-chart-canvas>
+    </div>
+
+    <div class="ts-card">
+      <h3>Budget vs Actual</h3>
+      <app-chart-canvas [config]="budgetVsActualConfig" [isEmpty]="budgetVsActualEmpty" [height]="240" emptyMessage="No budgets configured yet."></app-chart-canvas>
+    </div>
+
+    <div class="ts-card">
+      <h3>Monthly Category Comparison</h3>
+      <app-chart-canvas [config]="monthlyCategoryConfig" [isEmpty]="monthlyCategoryEmpty" [height]="240"></app-chart-canvas>
+    </div>
+  </div>
+</div>

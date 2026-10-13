@@ -1,0 +1,47 @@
+<div class="ts-page">
+  <div class="ts-header-row">
+    <h2>Categories</h2>
+    <button mat-flat-button color="primary" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon> New Category
+    </button>
+  </div>
+
+  <mat-tab-group (selectedIndexChange)="onTabChange($event)">
+    <mat-tab label="Expense">
+      <div class="ts-category-list">
+        @for (c of expenseCategories(); track c.id) {
+          <div class="ts-card ts-category-row" [class.ts-inactive]="!c.isActive">
+            <mat-icon [style.color]="c.color">{{ c.icon }}</mat-icon>
+            <span class="ts-category-name">{{ c.name }}</span>
+            @if (!c.isActive) { <span class="ts-muted ts-badge">Archived</span> }
+            <mat-slide-toggle [checked]="c.isActive" (change)="toggleActive(c)"></mat-slide-toggle>
+            <button mat-icon-button (click)="openEditDialog(c)" aria-label="Edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="deleteCategory(c)" aria-label="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+    </mat-tab>
+    <mat-tab label="Income">
+      <div class="ts-category-list">
+        @for (c of incomeCategories(); track c.id) {
+          <div class="ts-card ts-category-row" [class.ts-inactive]="!c.isActive">
+            <mat-icon [style.color]="c.color">{{ c.icon }}</mat-icon>
+            <span class="ts-category-name">{{ c.name }}</span>
+            @if (!c.isActive) { <span class="ts-muted ts-badge">Archived</span> }
+            <mat-slide-toggle [checked]="c.isActive" (change)="toggleActive(c)"></mat-slide-toggle>
+            <button mat-icon-button (click)="openEditDialog(c)" aria-label="Edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="deleteCategory(c)" aria-label="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

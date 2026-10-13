@@ -1,0 +1,57 @@
+.ts-full-width {
+  width: 100%;
+  display: block;
+  margin-bottom: 8px;
+}
+
+h4 {
+  margin: 12px 0 6px;
+}
+
+.ts-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 40px);
+  gap: 8px;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.ts-icon-swatch {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.ts-selected {
+    border-color: var(--ts-primary);
+    background: rgba(0, 105, 92, 0.1);
+  }
+}
+
+.ts-color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 28px);
+  gap: 8px;
+}
+
+.ts-color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+
+  &.ts-selected {
+    border-color: #000;
+  }
+}
+
+.ts-active-toggle {
+  display: block;
+  margin-top: 16px;
+}

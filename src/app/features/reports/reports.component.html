@@ -1,0 +1,99 @@
+<div class="ts-page">
+  <h2>Reports</h2>
+
+  <mat-button-toggle-group [value]="preset()" (change)="selectPreset($event.value)" class="ts-preset-toggle">
+    @for (p of presets; track p.value) {
+      <mat-button-toggle [value]="p.value">{{ p.label }}</mat-button-toggle>
+    }
+  </mat-button-toggle-group>
+
+  @if (preset() === 'CUSTOM') {
+    <form [formGroup]="customForm" class="ts-custom-range">
+      <mat-form-field appearance="outline">
+        <mat-label>From</mat-label>
+        <input matInput [matDatepicker]="startPicker" formControlName="startDate" (dateChange)="onCustomRangeChange()" />
+        <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>To</mat-label>
+        <input matInput [matDatepicker]="endPicker" formControlName="endDate" (dateChange)="onCustomRangeChange()" />
+        <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+      </mat-form-field>
+    </form>
+  }
+
+  @if (totals(); as t) {
+    <div class="ts-summary-grid">
+      <div class="ts-card">
+        <span class="ts-muted">Income</span>
+        <strong class="ts-amount-income">{{ formatInr(t.incomePaise) }}</strong>
+        @if (previousTotals(); as p) {
+          @if (changePercent(t.incomePaise, p.incomePaise); as c) {
+            <span class="ts-muted ts-change">{{ c >= 0 ? '▲' : '▼' }} {{ c | number: '1.0-0' }}% vs previous period</span>
+          }
+        }
+      </div>
+      <div class="ts-card">
+        <span class="ts-muted">Expenses</span>
+        <strong class="ts-amount-expense">{{ formatInr(t.expensePaise) }}</strong>
+        @if (previousTotals(); as p) {
+          @if (changePercent(t.expensePaise, p.expensePaise); as c) {
+            <span class="ts-muted ts-change">{{ c >= 0 ? '▲' : '▼' }} {{ c | number: '1.0-0' }}% vs previous period</span>
+          }
+        }
+      </div>
+      <div class="ts-card">
+        <span class="ts-muted">Net Balance</span>
+        <strong [class.ts-amount-income]="t.netPaise >= 0" [class.ts-amount-expense]="t.netPaise < 0">
+          {{ formatInr(t.netPaise) }}
+        </strong>
+      </div>
+      <div class="ts-card">
+        <span class="ts-muted">Average Daily Spending</span>
+        <strong>{{ formatInr(averageDailyExpense()) }}</strong>
+      </div>
+    </div>
+
+    @if (highestSpendingDay(); as h) {
+      <div class="ts-card ts-highlight-row">
+        <mat-icon>trending_up</mat-icon>
+        <span>Highest spending day: <strong>{{ h.dateKey }}</strong> — {{ formatInr(h.expensePaise) }}</span>
+      </div>
+    }
+
+    <div class="ts-lists-grid">
+      <div class="ts-card">
+        <h3>Top Spending Categories</h3>
+        @if (topCategories().length === 0) {
+          <p class="ts-muted">No expenses in this period.</p>
+        }
+        @for (c of topCategories(); track c.categoryId) {
+          <div class="ts-category-row">
+            <mat-icon [style.color]="c.color">{{ c.icon }}</mat-icon>
+            <span class="ts-category-name">{{ c.categoryName }}</span>
+            <span class="ts-muted">{{ c.percent | number: '1.0-0' }}%</span>
+            <span class="ts-amount-expense">{{ formatInr(c.amountPaise) }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="ts-card">
+        <h3>Largest Transactions</h3>
+        @if (largestTransactions().length === 0) {
+          <p class="ts-muted">No transactions in this period.</p>
+        }
+        @for (tx of largestTransactions(); track tx.id) {
+          <div class="ts-category-row">
+            <mat-icon [style.color]="categoryFor(tx)?.color ?? '#90a4ae'">{{ categoryFor(tx)?.icon ?? 'category' }}</mat-icon>
+            <span class="ts-category-name">{{ tx.merchant || tx.description || categoryFor(tx)?.name }}</span>
+            <span [class.ts-amount-income]="tx.type === 'INCOME'" [class.ts-amount-expense]="tx.type === 'EXPENSE'">
+              {{ formatInr(tx.amountPaise) }}
+            </span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,660 @@
+One important technical note: automatic SMS reading depends on the platform. A browser-based Angular PWA cannot freely read a phone's SMS inbox. For Android, use a native Android app or a Capacitor-based app with an appropriate native SMS integration and permissions. On Windows or the web, support importing SMS messages instead.
+
+Project Prompt: TrackSelavu — Offline Daily Expense Tracker
+
+# Project Prompt: TrackSelavu — Offline Daily Expense Tracker
+
+## 1. Project Overview
+
+Build a modern, user-friendly personal finance application named **TrackSelavu**.
+
+TrackSelavu helps users track daily expenses, income, budgets, and savings. The application must be designed with an **offline-first architecture**, storing all financial data locally on the user's device without requiring a backend server, cloud database, or internet connection for normal usage.
+
+**App name:** TrackSelavu
+**Tagline:** செலவைக் குறைப்பதைவிட வருமானத்தைப் பெருக்குவது சிறந்தது..
+**Currency:** Indian Rupee (₹ / INR)
+**Primary audience:** Individual users in India
+**Design language:** Modern, clean, responsive, and mobile-friendly
+**Data privacy:** Financial data remains on the user's device unless the user explicitly exports or shares it.
+
+## 2. Recommended Technology Stack
+
+Use the following technologies:
+
+* Frontend: Angular with TypeScript.
+
+* UI: Angular Material or a consistent modern component library.
+
+* Local database: IndexedDB.
+
+* IndexedDB wrapper: `idb`.
+
+* Charts: Apache ECharts or Chart.js.
+
+* Application installation: Progressive Web App (PWA).
+
+* Offline support: Service worker and cached application assets.
+
+* Currency formatting: INR using the Indian numbering system.
+
+* Testing: Unit tests for calculations, database operations, reports, and SMS parsing.
+
+Keep the application modular, maintainable, and easy to extend.
+
+Do not create a backend API or require PostgreSQL, MongoDB, Firebase, or any cloud database.
+
+## 3. Core Features
+
+### Feature 1: Add, Edit, and Delete Transactions
+
+Allow users to create, edit, view, and delete income and expense transactions.
+
+Each transaction should contain:
+
+* Unique transaction ID.
+
+* Transaction type: Income or Expense.
+
+* Amount in INR.
+
+* Category.
+
+* Transaction date and time.
+
+* Payment method: Cash, UPI, Debit Card, Credit Card, Bank Transfer, or Other.
+
+* Description or notes.
+
+* Merchant or payee name, when available.
+
+* Source: Manual Entry or SMS Import.
+
+* Creation and modification timestamps.
+
+Requirements:
+
+* Validate that amounts are positive.
+
+* Display a confirmation before deleting a transaction.
+
+* Support decimal amounts, such as ₹125.50.
+
+* Allow users to edit automatically detected SMS transactions.
+
+* Prevent accidental duplicate transactions when importing SMS messages.
+
+* Store monetary amounts using integer paise or an appropriate precise decimal representation. Avoid floating-point errors in financial calculations.
+
+### Feature 2: Income and Expense Tracking
+
+Support both income and expense records.
+
+Suggested income categories:
+
+* Salary
+
+* Business
+
+* Freelance
+
+* Interest
+
+* Refund
+
+* Other Income
+
+Suggested expense categories:
+
+* Food
+
+* Petrol and Fuel
+
+* Shopping
+
+* Bills
+
+* Travel
+
+* Rent
+
+* Groceries
+
+* Medical
+
+* Entertainment
+
+* Education
+
+* EMI and Loans
+
+* Subscriptions
+
+* Other Expenses
+
+Display:
+
+* Total income.
+
+* Total expenses.
+
+* Net balance.
+
+* Today's spending.
+
+* Current month's spending.
+
+* Remaining monthly budget.
+
+Calculate totals correctly using the selected date range and transaction type.
+
+Do not confuse income with refunds, transfers, or credit-card payments. Support appropriate transaction classifications where needed.
+
+### Feature 3: Categories
+
+Allow users to create, edit, and manage custom categories.
+
+Each category should have:
+
+* Name.
+
+* Type: Income or Expense.
+
+* Icon.
+
+* Display color.
+
+* Active/inactive status.
+
+Provide sensible default categories on first launch.
+
+Allow filtering transactions and charts by category.
+
+Deleting a category must not silently delete its historical transactions. Require the user to reassign affected transactions or archive the category.
+
+### Feature 4: Daily, Weekly, and Monthly Reports
+
+Provide a Reports screen with selectable date ranges:
+
+* Today.
+
+* Yesterday.
+
+* This week.
+
+* Last week.
+
+* This month.
+
+* Last month.
+
+* Custom date range.
+
+Display income, expenses, and net balance for the selected period.
+
+Include comparisons with the previous equivalent period, where applicable.
+
+Examples:
+
+* Today's expense total.
+
+* This week's expense total.
+
+* Current month's income and spending.
+
+* Top spending categories.
+
+* Largest transactions.
+
+* Average daily spending.
+
+* Highest-spending day.
+
+All reports must be calculated from locally stored transactions without an internet connection.
+
+### Feature 5: Budget Management
+
+Allow users to set:
+
+* Overall monthly expense budgets.
+
+* Category-specific monthly budgets.
+
+* Optional weekly budgets.
+
+For each budget, display:
+
+* Budget limit.
+
+* Amount spent.
+
+* Remaining amount.
+
+* Percentage used.
+
+* Warning when approaching the budget limit.
+
+* Exceeded-budget notification.
+
+Example:
+
+Monthly budget: ₹20,000
+Spent: ₹12,500
+Remaining: ₹7,500
+Used: 62.5%
+
+Use visual progress bars and clear warning states.
+
+Calculate budget usage using expense transactions only, unless the user explicitly configures another rule.
+
+Budget calculations must respect the selected month, category, and budget period.
+
+### Feature 6: Transaction Search and Filters
+
+Create a searchable transaction history screen.
+
+Support:
+
+* Search by description or merchant.
+
+* Filter by transaction type.
+
+* Filter by category.
+
+* Filter by payment method.
+
+* Filter by date range.
+
+* Filter by minimum and maximum amount.
+
+* Filter by transaction source.
+
+* Sort by date, amount, and category.
+
+Provide pagination or efficient incremental loading for large transaction histories.
+
+Include a Clear Filters option and display a helpful empty state when no transactions match.
+
+### Feature 7: Backup and Restore
+
+Provide a dedicated Backup and Restore screen.
+
+Export:
+
+* All transactions.
+
+* Categories.
+
+* Budgets.
+
+* User preferences.
+
+* Other required application data.
+
+Backup requirements:
+
+* Export to a versioned JSON file.
+
+* Include an export timestamp and schema version.
+
+* Use a filename such as `TrackSelavu_Backup_YYYY-MM-DD.json`.
+
+* Validate the backup structure before restoring.
+
+* Show a preview of the data to be imported.
+
+* Detect duplicate transaction IDs and duplicate imported SMS records.
+
+* Offer safe restore options: merge or replace all data.
+
+* Require explicit confirmation before replacing existing data.
+
+* Use a database transaction so a failed restore does not leave partially imported data.
+
+* Handle invalid, corrupted, or unsupported backup files gracefully.
+
+Do not transmit backups to any external server.
+
+Also provide CSV export for transactions so users can open them in Excel.
+
+### Feature 8: Interactive Charts and Analytics
+
+Create a Charts and Analytics screen using ECharts or Chart.js.
+
+Provide Daily and Monthly views, with category breakdowns.
+
+Required charts:
+
+1. Daily expense trend — line chart showing spending by day.
+
+2. Monthly expense trend — line or bar chart showing monthly spending.
+
+3. Category-wise expenses — doughnut or pie chart.
+
+4. Income versus expenses — grouped bar chart.
+
+5. Budget versus actual spending — comparison chart.
+
+6. Monthly category comparison — stacked bar chart.
+
+Chart requirements:
+
+* Switch between daily, weekly, and monthly views.
+
+* Select a custom date range.
+
+* Filter by income or expense.
+
+* Display category names, amounts, and percentages.
+
+* Show tooltips formatted in INR.
+
+* Allow tapping or clicking a chart segment to filter the transaction list.
+
+* Display meaningful empty states when no transactions exist.
+
+* Calculate charts entirely from IndexedDB data.
+
+### Feature 9: Automatic SMS-Based Expense Detection
+
+Implement an SMS expense-detection module that identifies transaction notifications and prepares expense or income records automatically.
+
+Important platform requirements:
+
+* Do not assume a web browser or Angular PWA can directly read the phone's SMS inbox.
+
+* For Android, provide a native Android integration or a suitable Capacitor plugin with explicit SMS permissions and platform-compliant distribution.
+
+* For platforms without SMS inbox access, provide SMS text paste and file import.
+
+* Keep SMS parsing independent from the UI and database layers.
+
+Recognize common transaction notification patterns from Indian banks, UPI services, and payment providers.
+
+Example SMS:
+
+"Rs. 250.00 debited from your account for UPI payment to ABC Restaurant on 12-Oct-2026."
+
+Extract, when available:
+
+* Transaction amount.
+
+* Debit or credit direction.
+
+* Transaction date.
+
+* Merchant or recipient.
+
+* Account identifier suffix.
+
+* Transaction reference number.
+
+* Payment method.
+
+* Original SMS text.
+
+Example parsed record:
+
+{
+"type": "EXPENSE",
+"amount": 25000,
+"currency": "INR",
+"category": "Food",
+"merchant": "ABC Restaurant",
+"paymentMethod": "UPI",
+"source": "SMS",
+"status": "PENDING_REVIEW"
+}
+
+The amount above is stored in paise, so 25000 represents ₹250.00.
+
+SMS processing rules:
+
+* Detect debit, credit, refund, reversal, and failed transaction messages.
+
+* Ignore promotional messages, OTPs, balance-only alerts, and unrelated messages.
+
+* Do not treat every credit as income; refunds and transfers need appropriate classification.
+
+* Detect duplicate messages using transaction references when available and a stable message fingerprint otherwise.
+
+* Do not create duplicate expenses when the same SMS is imported more than once.
+
+* Avoid treating card-payment reminders as actual transactions.
+
+* Allow the user to review, edit, approve, or reject parsed transactions.
+
+* Use configurable merchant-to-category rules.
+
+* Learn from user-confirmed category corrections using local rules.
+
+* Handle unknown message formats safely.
+
+* Do not upload SMS content to a server or third-party AI service.
+
+* Do not log complete SMS contents unnecessarily.
+
+Default behavior should be **review before saving**. Allow an optional auto-save mode after the user enables it and configures confidence and filtering rules.
+
+For Android, request only the permissions needed for the implemented functionality. Clearly explain the purpose of each permission and comply with Google Play SMS permission restrictions. Do not silently collect messages or bypass operating-system security.
+
+### Feature 10: Dashboard
+
+Create a polished home dashboard containing:
+
+* Total expenses today.
+
+* Total expenses this month.
+
+* Total income this month.
+
+* Net monthly balance.
+
+* Remaining budget.
+
+* Recent transactions.
+
+* Top three spending categories.
+
+* Daily expense mini-chart.
+
+* Monthly expense chart.
+
+* Quick Add Expense button.
+
+* Quick Add Income button.
+
+* Search transactions button.
+
+* Backup status and last backup date.
+
+Display a clear empty state for new users with a call to action to add their first transaction.
+
+## 4. UI and Design Requirements
+
+Use a clean, modern personal-finance design.
+
+Suggested visual style:
+
+* Primary color: Deep teal or dark green.
+
+* Accent color: Warm yellow or orange.
+
+* Light theme with white or subtle gray cards.
+
+* Optional dark mode.
+
+* Rounded cards and accessible typography.
+
+* Simple navigation and clear icons.
+
+* Responsive layout for phones, tablets, and desktops.
+
+* Large, touch-friendly controls for mobile devices.
+
+* Consistent spacing and reusable components.
+
+Suggested navigation:
+
+1. Dashboard
+
+2. Transactions
+
+3. Add Transaction
+
+4. Budgets
+
+5. Reports and Charts
+
+6. SMS Import
+
+7. Categories
+
+8. Backup and Restore
+
+9. Settings
+
+Use the name TrackSelavu consistently throughout the interface.
+
+## 5. Offline-First Requirements
+
+The application must remain useful without an internet connection.
+
+Implement:
+
+* Local IndexedDB persistence.
+
+* Offline application shell through a service worker.
+
+* Local calculations for reports and budgets.
+
+* Local category and transaction management.
+
+* Local SMS parsing.
+
+* Local backup and restore.
+
+* Clear error handling when storage is unavailable or full.
+
+The app must not require a login, API key, backend server, or cloud connection for normal operation.
+
+Cache application assets so the installed or previously loaded app can reopen offline. Do not promise first-time installation or initial loading without a connection unless the installation package has already been provided locally.
+
+Use IndexedDB as the primary data store rather than localStorage for financial transactions.
+
+## 6. Data Model
+
+Design IndexedDB stores for:
+
+* `transactions`
+
+* `categories`
+
+* `budgets`
+
+* `accounts`
+
+* `sms_imports`
+
+* `settings`
+
+Use stable IDs and appropriate indexes for date, transaction type, category, and SMS deduplication.
+
+Store timestamps consistently and handle date-only transaction values carefully to avoid timezone-related reporting errors.
+
+For financial precision, store amounts as integer paise or another exact representation.
+
+Use database schema versioning and migrations so future application upgrades do not destroy user data.
+
+## 7. Security and Privacy
+
+* Keep all personal financial data on the device by default.
+
+* Do not add third-party analytics or tracking without explicit consent.
+
+* Do not expose sensitive account information unnecessarily.
+
+* Use app-lock functionality where appropriate.
+
+* Warn users that browser storage is not equivalent to encrypted storage.
+
+* Offer encrypted backup files as an optional enhancement.
+
+* Never claim that an ordinary PIN screen encrypts the database.
+
+* Ensure restore operations are validated and atomic.
+
+* Explain that clearing browser data or losing the device may erase financial records unless a backup exists.
+
+## 8. Testing and Acceptance Criteria
+
+Verify the following scenarios:
+
+1. Add an expense and confirm it remains after restarting the application.
+
+2. Edit and delete transactions successfully.
+
+3. Calculate daily, weekly, and monthly totals correctly.
+
+4. Validate income, expenses, refunds, and reversals.
+
+5. Confirm category-based reports match the transaction records.
+
+6. Verify budget remaining balances and warning thresholds.
+
+7. Search and filter transactions accurately.
+
+8. Export a backup and restore it without data loss.
+
+9. Reject invalid backup files without changing existing data.
+
+10. Import the same SMS twice without duplicating transactions.
+
+11. Parse debit, credit, refund, reversal, failed-payment, and promotional SMS examples correctly.
+
+12. Confirm SMS transactions require review by default.
+
+13. Confirm the application and charts work with internet disabled.
+
+14. Confirm application upgrades preserve existing IndexedDB records.
+
+15. Test empty states, large datasets, and storage errors.
+
+## 9. Implementation Instructions
+
+First inspect the existing project and reuse its current framework and configuration if appropriate.
+
+Then implement the application in phases:
+
+Phase 1: Project setup, layout, IndexedDB schema, and dashboard.
+
+Phase 2: Transaction CRUD, categories, and payment methods.
+
+Phase 3: Reports, charts, and budgets.
+
+Phase 4: Search, filters, CSV export, and JSON backup/restore.
+
+Phase 5: SMS parsing, duplicate detection, review workflow, and platform-specific Android integration where supported.
+
+Phase 6: PWA installation, offline caching, migrations, security checks, and testing.
+
+Create reusable components and services. Keep UI components, business logic, storage operations, and SMS parsing separate.
+
+Provide complete working code, database initialization, sample data, configuration instructions, tests, and a README explaining how to run and build TrackSelavu.
+
+Do not merely generate a visual mockup. Implement the working features and clearly identify any feature that requires native Android capabilities or additional platform configuration.
+
+Start with the offline Angular application and IndexedDB. Make SMS inbox integration a separate, platform-specific module so it does not compromise the core offline application.
+
+## Recommended implementation order
+
+Build the core expense tracker first, then add SMS integration. This keeps the first version usable even if Android SMS permissions or platform integration take extra work.
+
+* Phase 1: Dashboard, transactions, categories, IndexedDB.
+
+* Phase 2: Budgets, charts, search, backup/restore.
+
+* Phase 3: SMS detection, review screen, duplicate prevention.
+
+* Phase 4: Offline installation, testing, and data protection.
+
+One important decision before coding: if automatic SMS reading is a must-have, target Android first. If you build only a browser-based Angular app, SMS paste/import is the practical option rather than unrestricted automatic inbox access.

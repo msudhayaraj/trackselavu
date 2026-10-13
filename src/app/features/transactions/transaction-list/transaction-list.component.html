@@ -1,0 +1,155 @@
+<div class="ts-page">
+  <div class="ts-header-row">
+    <h2>Transactions</h2>
+    <button mat-flat-button color="primary" routerLink="/transactions/new">
+      <mat-icon>add</mat-icon> Add Transaction
+    </button>
+  </div>
+
+  <mat-expansion-panel class="ts-filter-panel" [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Filters</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <form [formGroup]="filterForm" class="ts-filter-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Search</mat-label>
+        <input matInput formControlName="searchText" placeholder="Description or merchant" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option value="">All</mat-option>
+          <mat-option value="EXPENSE">Expense</mat-option>
+          <mat-option value="INCOME">Income</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="categoryId">
+          <mat-option value="">All</mat-option>
+          @for (c of categories(); track c.id) {
+            <mat-option [value]="c.id">
+              <mat-icon class="ts-option-icon" [style.color]="c.color">{{ c.icon }}</mat-icon>
+              {{ c.name }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Payment Method</mat-label>
+        <mat-select formControlName="paymentMethod">
+          <mat-option value="">All</mat-option>
+          @for (m of paymentMethods; track m) {
+            <mat-option [value]="m">{{ paymentMethodLabels[m] }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Source</mat-label>
+        <mat-select formControlName="source">
+          <mat-option value="">All</mat-option>
+          <mat-option value="MANUAL">Manual Entry</mat-option>
+          <mat-option value="SMS">SMS Import</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>From</mat-label>
+        <input matInput [matDatepicker]="startPicker" formControlName="startDate" />
+        <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>To</mat-label>
+        <input matInput [matDatepicker]="endPicker" formControlName="endDate" />
+        <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Min Amount (₹)</mat-label>
+        <input matInput formControlName="minAmount" inputmode="decimal" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Max Amount (₹)</mat-label>
+        <input matInput formControlName="maxAmount" inputmode="decimal" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Sort By</mat-label>
+        <mat-select formControlName="sortBy">
+          <mat-option value="date">Date</mat-option>
+          <mat-option value="amount">Amount</mat-option>
+          <mat-option value="category">Category</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Order</mat-label>
+        <mat-select formControlName="sortDir">
+          <mat-option value="desc">Descending</mat-option>
+          <mat-option value="asc">Ascending</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+
+    @if (hasActiveFilters()) {
+      <button mat-button (click)="clearFilters()">
+        <mat-icon>clear</mat-icon> Clear Filters
+      </button>
+    }
+  </mat-expansion-panel>
+
+  <div class="ts-card ts-transaction-table">
+    @if (!loading() && items().length === 0) {
+      <div class="ts-empty-state">
+        <mat-icon class="ts-empty-icon">search_off</mat-icon>
+        <p>No transactions match your filters.</p>
+      </div>
+    }
+
+    @for (t of items(); track t.id) {
+      <div class="ts-transaction-row">
+        <mat-icon [style.color]="categoryFor(t)?.color ?? '#90a4ae'">{{ categoryFor(t)?.icon ?? 'category' }}</mat-icon>
+        <div class="ts-transaction-info">
+          <span class="ts-transaction-title">{{ t.merchant || t.description || categoryFor(t)?.name || 'Transaction' }}</span>
+          <span class="ts-muted ts-transaction-meta">
+            {{ t.dateKey }} · {{ categoryFor(t)?.name }} · {{ paymentMethodLabels[t.paymentMethod] }}
+            @if (t.source === 'SMS') { · <mat-icon class="ts-inline-icon">sms</mat-icon> }
+          </span>
+        </div>
+        <span
+          class="ts-transaction-amount"
+          [class.ts-amount-income]="t.type === 'INCOME'"
+          [class.ts-amount-expense]="t.type === 'EXPENSE'"
+        >
+          {{ t.type === 'EXPENSE' ? '-' : '+' }}{{ formatInr(t.amountPaise) }}
+        </span>
+        <button mat-icon-button [routerLink]="['/transactions', t.id, 'edit']" aria-label="Edit">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="deleteTransaction(t)" aria-label="Delete">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    }
+
+    @if (total() > 0) {
+      <mat-paginator
+        [length]="total()"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[10, 25, 50, 100]"
+        (page)="onPage($event)"
+      ></mat-paginator>
+    }
+  </div>
+</div>

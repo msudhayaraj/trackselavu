@@ -1,0 +1,129 @@
+<div class="ts-page">
+  @if (!loading() && !hasAnyTransactions()) {
+    <div class="ts-card ts-empty-state">
+      <mat-icon class="ts-empty-icon">account_balance_wallet</mat-icon>
+      <h2>Welcome to TrackSelavu</h2>
+      <p class="ts-muted">Start by adding your first income or expense. Everything stays on this device.</p>
+      <div class="ts-empty-actions">
+        <button mat-flat-button color="primary" routerLink="/transactions/new" [queryParams]="{ type: 'EXPENSE' }">
+          <mat-icon>remove_circle</mat-icon> Add Expense
+        </button>
+        <button mat-stroked-button color="primary" routerLink="/transactions/new" [queryParams]="{ type: 'INCOME' }">
+          <mat-icon>add_circle</mat-icon> Add Income
+        </button>
+      </div>
+    </div>
+  } @else if (!loading()) {
+    <div class="ts-quick-actions">
+      <button mat-flat-button color="accent" routerLink="/transactions/new" [queryParams]="{ type: 'EXPENSE' }">
+        <mat-icon>remove_circle</mat-icon> Quick Add Expense
+      </button>
+      <button mat-stroked-button color="primary" routerLink="/transactions/new" [queryParams]="{ type: 'INCOME' }">
+        <mat-icon>add_circle</mat-icon> Quick Add Income
+      </button>
+      <button mat-stroked-button routerLink="/transactions">
+        <mat-icon>search</mat-icon> Search Transactions
+      </button>
+    </div>
+
+    <div class="ts-summary-grid">
+      <div class="ts-card ts-summary-card">
+        <span class="ts-muted">Today's Spending</span>
+        <strong class="ts-amount-expense">{{ formatInr(todayExpensePaise()) }}</strong>
+      </div>
+      <div class="ts-card ts-summary-card">
+        <span class="ts-muted">This Month — Income</span>
+        <strong class="ts-amount-income">{{ formatInr(monthIncomePaise()) }}</strong>
+      </div>
+      <div class="ts-card ts-summary-card">
+        <span class="ts-muted">This Month — Expenses</span>
+        <strong class="ts-amount-expense">{{ formatInr(monthExpensePaise()) }}</strong>
+      </div>
+      <div class="ts-card ts-summary-card">
+        <span class="ts-muted">Net Monthly Balance</span>
+        <strong [class.ts-amount-income]="netBalancePaise() >= 0" [class.ts-amount-expense]="netBalancePaise() < 0">
+          {{ formatInr(netBalancePaise()) }}
+        </strong>
+      </div>
+    </div>
+
+    @if (hasBudget()) {
+      <div class="ts-card ts-budget-card">
+        <div class="ts-budget-header">
+          <span>Remaining Monthly Budget</span>
+          <strong [class.ts-amount-expense]="budgetExceeded()">{{ formatInr(budgetRemainingPaise()) }}</strong>
+        </div>
+        <mat-progress-bar
+          [value]="budgetPercentUsed()"
+          [color]="budgetExceeded() ? 'warn' : budgetWarning() ? 'accent' : 'primary'"
+        ></mat-progress-bar>
+        <div class="ts-budget-footer ts-muted">
+          {{ formatInr(budgetSpentPaise()) }} of {{ formatInr(budgetLimitPaise()) }} used
+          ({{ budgetPercentUsed() | number: '1.0-0' }}%)
+          @if (budgetExceeded()) {
+            <span class="ts-amount-expense"> · Budget exceeded</span>
+          } @else if (budgetWarning()) {
+            <span class="ts-amount-expense"> · Approaching limit</span>
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="ts-card ts-budget-card ts-budget-empty">
+        <span class="ts-muted">No overall monthly budget set.</span>
+        <button mat-button color="primary" routerLink="/budgets">Set a Budget</button>
+      </div>
+    }
+
+    <div class="ts-charts-grid">
+      <div class="ts-card">
+        <h3>This Week's Spending</h3>
+        <app-chart-canvas [config]="dailyChartConfig" [height]="200"></app-chart-canvas>
+      </div>
+      <div class="ts-card">
+        <h3>Last 6 Months</h3>
+        <app-chart-canvas [config]="monthlyChartConfig" [height]="200"></app-chart-canvas>
+      </div>
+    </div>
+
+    <div class="ts-lists-grid">
+      <div class="ts-card">
+        <h3>Top Spending Categories</h3>
+        @if (topCategories().length === 0) {
+          <p class="ts-muted">No expenses recorded this month yet.</p>
+        }
+        @for (c of topCategories(); track c.categoryId) {
+          <div class="ts-top-category-row">
+            <mat-icon [style.color]="c.color">{{ c.icon }}</mat-icon>
+            <span class="ts-top-category-name">{{ c.categoryName }}</span>
+            <span class="ts-amount-expense">{{ formatInr(c.amountPaise) }}</span>
+          </div>
+        }
+      </div>
+
+      <div class="ts-card">
+        <div class="ts-card-header-row">
+          <h3>Recent Transactions</h3>
+          <a routerLink="/transactions">View all</a>
+        </div>
+        @for (t of recentTransactions(); track t.id) {
+          <div class="ts-recent-row">
+            <mat-icon [style.color]="categoryFor(t)?.color ?? '#90a4ae'">{{ categoryFor(t)?.icon ?? 'category' }}</mat-icon>
+            <div class="ts-recent-info">
+              <span>{{ t.merchant || t.description || categoryFor(t)?.name || 'Transaction' }}</span>
+              <span class="ts-muted ts-recent-date">{{ t.dateKey }}</span>
+            </div>
+            <span [class.ts-amount-income]="t.type === 'INCOME'" [class.ts-amount-expense]="t.type === 'EXPENSE'">
+              {{ t.type === 'EXPENSE' ? '-' : '+' }}{{ formatInr(t.amountPaise) }}
+            </span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="ts-card ts-backup-status">
+      <mat-icon>cloud_done</mat-icon>
+      <span>Last backup: {{ lastBackupLabel() }}</span>
+      <a routerLink="/backup-restore">Backup now</a>
+    </div>
+  }
+</div>

@@ -1,0 +1,70 @@
+<div class="ts-page ts-narrow">
+  <h2>Settings</h2>
+
+  <div class="ts-card">
+    <h3>Appearance</h3>
+    <mat-button-toggle-group [value]="theme()" (change)="setTheme($event.value)">
+      <mat-button-toggle value="light">Light</mat-button-toggle>
+      <mat-button-toggle value="dark">Dark</mat-button-toggle>
+      <mat-button-toggle value="system">System</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <div class="ts-card">
+    <h3>Calendar</h3>
+    <p class="ts-muted">Week starts on</p>
+    <mat-button-toggle-group [value]="weekStartsOn()" (change)="setWeekStartsOn($event.value)">
+      <mat-button-toggle value="MONDAY">Monday</mat-button-toggle>
+      <mat-button-toggle value="SUNDAY">Sunday</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <div class="ts-card">
+    <h3>SMS Import</h3>
+    <mat-slide-toggle [checked]="smsAutoSaveEnabled()" (change)="toggleSmsAutoSave($event.checked)">
+      Auto-save high-confidence SMS transactions
+    </mat-slide-toggle>
+    <p class="ts-muted ts-hint">
+      When enabled, SMS messages parsed with high confidence are saved automatically instead of waiting
+      for manual review. Everything else still goes through the review screen.
+    </p>
+    @if (smsAutoSaveEnabled()) {
+      <div class="ts-confidence-row">
+        <span class="ts-muted">Minimum confidence: {{ smsAutoSaveMinConfidence() | number: '1.0-2' }}</span>
+        <mat-slider min="0.5" max="0.99" step="0.01" discrete>
+          <input
+            matSliderThumb
+            [value]="smsAutoSaveMinConfidence()"
+            (valueChange)="updateConfidence($event)"
+          />
+        </mat-slider>
+      </div>
+    }
+  </div>
+
+  <div class="ts-card">
+    <h3>App Lock</h3>
+    <p class="ts-muted ts-hint">
+      App Lock adds a PIN screen when opening TrackSelavu. It does not encrypt the data stored in your
+      browser — anyone with direct access to this device's storage can still read it.
+    </p>
+    @if (!appLockEnabled()) {
+      <mat-form-field appearance="outline">
+        <mat-label>Set a PIN</mat-label>
+        <input matInput type="password" inputmode="numeric" [ngModel]="pinInput()" (ngModelChange)="pinInput.set($event)" maxlength="8" />
+      </mat-form-field>
+    }
+    <mat-slide-toggle [checked]="appLockEnabled()" (change)="toggleAppLock($event.checked)">
+      Require PIN to open the app
+    </mat-slide-toggle>
+  </div>
+
+  <div class="ts-card">
+    <h3>Data &amp; Privacy</h3>
+    <p class="ts-muted">
+      All data is stored locally in this browser's IndexedDB. Clearing browser data or uninstalling the
+      app will erase your financial records unless you have a backup. Use the Backup &amp; Restore screen
+      regularly.
+    </p>
+  </div>
+</div>

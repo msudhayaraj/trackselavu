@@ -1,0 +1,98 @@
+<div class="ts-page">
+  <h2>SMS Import</h2>
+  <p class="ts-muted">
+    Paste bank/UPI transaction SMS text below, or import a text file. Separate multiple messages with a
+    blank line. Nothing is uploaded anywhere — parsing happens entirely on this device.
+  </p>
+
+  <div class="ts-card">
+    <mat-form-field appearance="outline" class="ts-full-width">
+      <mat-label>Paste SMS text</mat-label>
+      <textarea
+        matInput
+        rows="5"
+        [value]="pasteText()"
+        (input)="pasteText.set($any($event.target).value)"
+        placeholder="Rs. 250.00 debited from your account for UPI payment to ABC Restaurant on 12-Oct-2026."
+      ></textarea>
+    </mat-form-field>
+    <div class="ts-paste-actions">
+      <button mat-flat-button color="primary" [disabled]="ingesting() || !pasteText().trim()" (click)="ingestPasted()">
+        <mat-icon>sms</mat-icon> Parse Messages
+      </button>
+      <label class="ts-file-import-label">
+        <input type="file" accept=".txt,text/plain" (change)="onFileSelected($event)" hidden #fileInput />
+        <button mat-stroked-button type="button" (click)="fileInput.click()">
+          <mat-icon>upload_file</mat-icon> Import Text File
+        </button>
+      </label>
+    </div>
+  </div>
+
+  <h3>Pending Review ({{ pendingItems().length }})</h3>
+
+  @if (!loading() && pendingItems().length === 0) {
+    <div class="ts-card ts-empty-state">
+      <mat-icon class="ts-empty-icon">mark_email_read</mat-icon>
+      <p class="ts-muted">No SMS messages waiting for review.</p>
+    </div>
+  }
+
+  @for (item of pendingItems(); track item.record.id) {
+    <div class="ts-card ts-pending-item">
+      <p class="ts-raw-sms ts-muted">{{ item.record.rawText }}</p>
+      <form [formGroup]="item.form" class="ts-pending-form">
+        <mat-button-toggle-group formControlName="type">
+          <mat-button-toggle value="EXPENSE">Expense</mat-button-toggle>
+          <mat-button-toggle value="INCOME">Income</mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Amount (₹)</mat-label>
+          <input matInput formControlName="amount" inputmode="decimal" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Category</mat-label>
+          <mat-select formControlName="categoryId">
+            @for (c of categoriesFor(item.form.controls['type'].value); track c.id) {
+              <mat-option [value]="c.id">
+                <mat-icon class="ts-option-icon" [style.color]="c.color">{{ c.icon }}</mat-icon>
+                {{ c.name }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="p" formControlName="date" />
+          <mat-datepicker-toggle matIconSuffix [for]="p"></mat-datepicker-toggle>
+          <mat-datepicker #p></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Payment Method</mat-label>
+          <mat-select formControlName="paymentMethod">
+            @for (m of paymentMethods; track m) {
+              <mat-option [value]="m">{{ paymentMethodLabels[m] }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Merchant</mat-label>
+          <input matInput formControlName="merchant" />
+        </mat-form-field>
+      </form>
+      <div class="ts-pending-actions">
+        <button mat-button (click)="reject(item)">
+          <mat-icon>close</mat-icon> Ignore
+        </button>
+        <button mat-flat-button color="primary" (click)="approve(item)">
+          <mat-icon>check</mat-icon> Approve &amp; Save
+        </button>
+      </div>
+    </div>
+  }
+</div>

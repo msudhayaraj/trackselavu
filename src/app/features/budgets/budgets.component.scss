@@ -1,0 +1,50 @@
+.ts-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ts-empty-state {
+  text-align: center;
+  padding: 32px 24px;
+  color: var(--ts-text-muted);
+
+  .ts-empty-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: var(--ts-primary);
+  }
+}
+
+.ts-budget-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.ts-budget-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.ts-budget-item-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 0.85rem;
+}
+
+.ts-budget-status {
+  margin: 6px 0 0;
+  font-size: 0.8rem;
+}
+
+.ts-budget-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}

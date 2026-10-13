@@ -1,0 +1,50 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Category' : 'New Category' }}</h2>
+<form [formGroup]="form" (ngSubmit)="save()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline" class="ts-full-width">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" maxlength="40" />
+      @if (form.controls.name.hasError('required')) {
+        <mat-error>Name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-button-toggle-group formControlName="type" class="ts-full-width" [disabled]="isEdit">
+      <mat-button-toggle value="EXPENSE">Expense</mat-button-toggle>
+      <mat-button-toggle value="INCOME">Income</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <h4>Icon</h4>
+    <div class="ts-icon-grid">
+      @for (icon of icons; track icon) {
+        <button
+          type="button"
+          class="ts-icon-swatch"
+          [class.ts-selected]="form.controls.icon.value === icon"
+          (click)="form.controls.icon.setValue(icon)"
+        >
+          <mat-icon>{{ icon }}</mat-icon>
+        </button>
+      }
+    </div>
+
+    <h4>Color</h4>
+    <div class="ts-color-grid">
+      @for (color of colors; track color) {
+        <button
+          type="button"
+          class="ts-color-swatch"
+          [style.background]="color"
+          [class.ts-selected]="form.controls.color.value === color"
+          (click)="form.controls.color.setValue(color)"
+        ></button>
+      }
+    </div>
+
+    <mat-slide-toggle formControlName="isActive" class="ts-active-toggle">Active</mat-slide-toggle>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button type="button" mat-button mat-dialog-close>Cancel</button>
+    <button type="submit" mat-flat-button color="primary">Save</button>
+  </mat-dialog-actions>
+</form>

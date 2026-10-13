@@ -1,0 +1,35 @@
+.ts-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ts-category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.ts-category-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+
+  &.ts-inactive {
+    opacity: 0.6;
+  }
+}
+
+.ts-category-name {
+  flex: 1;
+}
+
+.ts-badge {
+  font-size: 0.75rem;
+  border: 1px solid currentColor;
+  border-radius: 10px;
+  padding: 1px 8px;
+}

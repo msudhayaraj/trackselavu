@@ -1,0 +1,81 @@
+.ts-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.ts-filter-panel {
+  margin-bottom: 16px;
+}
+
+.ts-option-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.ts-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px 12px;
+  padding-top: 8px;
+}
+
+.ts-transaction-table {
+  padding: 0;
+  overflow: hidden;
+}
+
+.ts-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--ts-text-muted);
+
+  .ts-empty-icon {
+    font-size: 42px;
+    width: 42px;
+    height: 42px;
+  }
+}
+
+.ts-transaction-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.ts-transaction-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ts-transaction-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ts-transaction-meta {
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ts-transaction-amount {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ts-inline-icon {
+  font-size: 14px;
+  height: 14px;
+  width: 14px;
+}

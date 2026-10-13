@@ -1,0 +1,58 @@
+.ts-narrow {
+  max-width: 560px;
+}
+
+.ts-full-width {
+  width: 100%;
+  display: block;
+}
+
+.ts-type-toggle {
+  margin-bottom: 16px;
+
+  ::ng-deep .mat-button-toggle {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+.ts-date-time-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ts-advanced-panel {
+  margin: 8px 0 16px;
+  box-shadow: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ts-hint {
+  font-size: 0.8rem;
+}
+
+.ts-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ts-spacer {
+  flex: 1;
+}
+
+.ts-option-icon {
+  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.ts-inline-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  vertical-align: middle;
+}
